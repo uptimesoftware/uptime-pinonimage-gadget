@@ -43,7 +43,6 @@ NewNodeDialogue = function() {
 		if (target.prop("name") == "Page") {
 			populateDestinationSelection(target);
 		}
-
 	};
 
 	this.showNodeSelection = function(event) {
@@ -51,12 +50,10 @@ NewNodeDialogue = function() {
 		if (target.prop("name") == "nodeType") {
 			populateNodeSelection($(target));
 		}
-
 	};
 
 	this.openDialogue = function() {
 		$("#createNode").dialog("open");
-
 	};
 
 	this.getNewSystem = function(mousePointer) {
@@ -103,7 +100,6 @@ NewNodeDialogue = function() {
 				if (group.id != 1 && group.name != "My Infrastructure") {
 					nodeList.append($("<option />").val(group.id).text(group.name));
 				}
-
 			});
 		} else if (radioSelected.val() == "element") {
 			$('availableElements').each(function(i, element) {

@@ -82,7 +82,6 @@ NodeUpdateRenderer = function(syncDashboard) {
 	};
 
 	var getWorstStatus = function(monitorStatuses) {
-
 		var worstMonitorStatus = "";
 		$.each(monitorStatuses, function(i, monitor) {
 			if (monitor.status == "MAINT" || worstMonitorStatus == "MAINT") {
@@ -101,7 +100,6 @@ NodeUpdateRenderer = function(syncDashboard) {
 	};
 
 	var getColour = function(status) {
-
 		if (status == "OK") {
 			return "green";
 		}
