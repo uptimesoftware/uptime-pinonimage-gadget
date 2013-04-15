@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<Module>
+	<ModulePrefs title="Pin On Image"
+		description="Pin elements and applications onto custom images such as maps, site plans or workflow diagrams."
+		thumbnail="thumb.png" /> 
+	<Content type="html">
+		<![CDATA[ 
+<html>
+<head>
+#includeResources(jquery,jqueryui,d3,uptimecss)
+<title>Pin On Gadget</title>
+<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/map.css" />
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/pinOnDashboard.js"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/NewNodeDialogue.js"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/NodeUpdateRenderer.js"></script>
+</head>
+<body>
+	<div id="editPanel">
+		Edit Mode: Select a background: 
+		<select id="backgroundList">
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/datacenter1.jpg">backgrounds/datacenter1.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/datacenter2.jpg">backgrounds/datacenter2.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/na_map.jpg">backgrounds/na_map.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/na_map3.jpg">backgrounds/na_map3.jpg</option>
+			<option
+				value="__UPTIME_GADGET_BASE__/backgrounds/virtual_infrastructure.jpg">backgrounds/virtual_infrastructure.jpg</option>
+		</select> 
+		
+		<br /> <br /> 
+		Click below to ADD new elements. <br /> 
+		Click on existing elements to remove them. <br /> <br /> <br /> <br /> 
+		<a id="closeEdit" href="#"> CLOSE EDIT </a>
+	</div>
+
+
+
+	<div id="createNode" title="Create new system">
+		<form>
+			<label>Add Element or Group? </label>
+			<div class="NodeTypeRadios">
+				<span> Element/Application </span><input type="radio" name="nodeType" value="element" checked="checked">
+				<span> Group </span><input type="radio" name="nodeType" value="group">
+			</div>
+			<div class="DestinationPageSection">
+			<div class="AddNodeInputs">
+				<label for="system"> Add Node: </label> <select id="nodeSelectOption" name="">
+					<option value="Loading...">Loading...</option>
+				</select>
+			</div>
+
+			<div class="AddNodeInputs">
+				<label>On Click Go To: </label>
+				<div class="PageTypeRadios">
+					<span> Dashboard Page </span><input type="radio" name="Page" checked="checked" value="Dashboard Page">
+					<span> Profile Page </span><input type="radio" name="Page" value="Profile Page">
+				</div>
+			</div>
+			<div class="AddNodeInputs DestinationSelectSection">
+				<span>Choose Page </span>
+				<select class="DestinationSelectionOption" name="destinationSelect">
+					<option value="Loading...">Loading...</option>
+				</select>
+			</div>
+			</div>
+		</form>
+		<span id="noGroupMessage" style="display:none;">No Groups are Created ... </span>
+	</div>
+
+	<div id="statusBar"
+		style="display: none; width: 100%; font-weight: bold; font-size: larger; position:absolute;">
+		Backend Call Status</div>
+
+	<div id="wholeBoard" class="editable">
+		<svg id="svgChart" xmlns="http://www.w3.org/2000/svg"
+			xmlns:xlink="http://www.w3.org/1999/xlink"
+			xmlns:ev="http://www.w3.org/2001/xml-events"
+			preserveAspectRatio="none" width="100%" height="100%"
+			onmousemove="null">
+       <image id="svgBackground" x="0px" y="0px" width="100%"
+				height="100%" preserveAspectRatio="none"
+				xlink:href="__UPTIME_GADGET_BASE__/backgrounds/virtual_infrastructure.jpg" />
+     </svg>
+	</div>
+
+
+
+	<div id="myUploadedFilesContainer" style="display: none">
+		My Gadget Instance Files
+		<ul id="myUploadedFiles">
+		</ul>
+	</div>
+
+
+	<div id="removeSystem-confirm" title="Remove System?"
+		style="display: none">
+		<p>
+			<span class="ui-icon ui-icon-alert"
+				style="float: left; margin: 0 7px 20px 0;"></span><span id="message">Do
+				you want to remove this system?</span>
+		</p>
+	</div>
+
+
+	<span style="position: fixed" id="systemTooltip"> </span>
+
+</body>
+</html>
+		]]>
+	</Content> 
+</Module>
