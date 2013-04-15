@@ -1,6 +1,6 @@
 NewNodeDialogue = function() {
-	var availableGroups;
-	var availableElements;
+	var availableGroups = {};
+	var availableElements = {};
 
 	$.ajax("/api/v1/groups", {
 		cache : false,
@@ -19,6 +19,7 @@ NewNodeDialogue = function() {
 		}
 	});
 
+	// FIXME use naturalSort
 	var sortByHostname = function(attributeToSortBy) {
 		return function(a, b) {
 			var hostname1 = a[attributeToSortBy];
@@ -96,13 +97,13 @@ NewNodeDialogue = function() {
 		var nodeList = $("#nodeSelectOption");
 		nodeList.empty();
 		if (radioSelected.val() == "group") {
-			$('availableGroups').each(function(i, group) {
+			$.each(availableGroups, function(i, group) {
 				if (group.id != 1 && group.name != "My Infrastructure") {
 					nodeList.append($("<option />").val(group.id).text(group.name));
 				}
 			});
 		} else if (radioSelected.val() == "element") {
-			$('availableElements').each(function(i, element) {
+			$.each(availableElements, function(i, element) {
 				nodeList.append($("<option />").val(element.id).text(element.hostname));
 			});
 		}
