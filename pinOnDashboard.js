@@ -9,21 +9,20 @@ $(function() {
 
 	uptimeGadget.registerOnLoadHandler(function(onLoadData) {
 		uptimeGadget.loadSettings(goodLoad, onBadAjax);
-		width= onLoadData.dimensions.width;
+		width = onLoadData.dimensions.width;
 		height = onLoadData.dimensions.height;
 		resizeBoard(width, height);
 	});
 
 	uptimeGadget.registerOnResizeHandler(function(dimensions) {
-		width= dimensions.width;
+		width = dimensions.width;
 		height = dimensions.height;
-		resizeBoard(width, height);		
+		resizeBoard(width, height);
 	});
 
-	uptimeGadget.registerOnUploadSuccessHandler(function(uploadedResource){
+	uptimeGadget.registerOnUploadSuccessHandler(function(uploadedResource) {
 		getBackgroundSelection();
 	});
-
 
 	uptimeGadget.registerOnEditHandler(showEditPanel);
 	getBackgroundSelection();
@@ -31,11 +30,10 @@ $(function() {
 	$(".PageTypeRadios").on("click", newNodeDialogue.showDestinationSelection);
 	$(".NodeTypeRadios").on("click", newNodeDialogue.showNodeSelection);
 
-	function resizeBoard(width, height){
+	function resizeBoard(width, height) {
 		$("#wholeBoard").css("width", width);
 		$("#wholeBoard").css("height", height);
 	}
-
 
 	$("#backgroundList").change(function() {
 		var newBackground = $(this).val();
@@ -49,10 +47,10 @@ $(function() {
 		modal : true,
 		buttons : {
 			"Pin on " : function() {
-				
+
 				var newSystem = newNodeDialogue.getNewSystem($(this));
 
-				if(allSettings["systems"] == null){
+				if (allSettings["systems"] == null) {
 					allSettings["systems"] = {};
 				}
 				allSettings["systems"][newSystem.d3Id] = newSystem;
@@ -94,9 +92,9 @@ $(function() {
 					primary : 'ui-icon-cancel'
 				}
 			});
-			
+
 			var selectedSystem = d3.select($(this).data("clickedSystem"));
-			$(this).find("span#message").text("Do you want to remove '" + selectedSystem.property("__data__").name + "'?")
+			$(this).find("span#message").text("Do you want to remove '" + selectedSystem.property("__data__").name + "'?");
 		},
 		buttons : {
 			"Remove System" : function(e) {
@@ -134,7 +132,6 @@ $(function() {
 			"yRatio" : yRatio
 		});
 
-		
 		$("#createNode").dialog("open");
 	});
 
@@ -146,9 +143,10 @@ $(function() {
 		d3.selectAll(".editable").classed("editOn", false);
 
 		$("#editPanel").slideUp();
-	};
+	}
+	;
 
-	function syncDashboard(){
+	function syncDashboard() {
 		var systems = {};
 		d3.selectAll("circle").each(function(d) {
 			systems[d.d3Id] = d;
@@ -158,8 +156,6 @@ $(function() {
 	}
 
 	function showEditPanel() {
-		var systemList = $("#nodeSelectOption");
-
 		$("#editPanel").slideDown();
 		$(".editable").addClass("editOn");
 		d3.selectAll(".editable").classed("editOn", true);
@@ -168,7 +164,7 @@ $(function() {
 	}
 
 	function goodLoad(settings) {
-		if(settings!=null){
+		if (settings != null) {
 			allSettings = {
 				"systems" : settings.systems || {},
 				"background" : settings.background
@@ -176,7 +172,6 @@ $(function() {
 		}
 		$("#loadedPanel").show().fadeOut(3000);
 		$("#svgBackground").attr("xlink:href", allSettings["background"]);
-		$("#backgroundList")
 
 		var statusBar = $("#statusBar");
 
@@ -230,13 +225,13 @@ $(function() {
 		}
 	}
 
-	function getBackgroundSelection(){
+	function getBackgroundSelection() {
 		uptimeGadget.listResources(populateBackgroundSelection);
 	}
 
-	function populateBackgroundSelection(backgrounds){
-		$.each(backgrounds, function(index, background){
-			$("#backgroundList").append('<option value="'+ background.url + '">' + background.name + '</option>');
+	function populateBackgroundSelection(backgrounds) {
+		$.each(backgrounds, function(index, background) {
+			$("#backgroundList").append('<option value="' + background.url + '">' + background.name + '</option>');
 		});
 	}
 
