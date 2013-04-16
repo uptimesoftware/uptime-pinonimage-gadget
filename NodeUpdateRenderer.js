@@ -39,9 +39,15 @@ NodeUpdateRenderer = function(syncDashboard) {
 	}, 5000);
 
 	var drag = d3.behavior.drag().origin(Object).on("dragstart", function(d) {
+		if (!$('#wholeBoard').hasClass("editOn")) {
+			return;
+		}
 		var div = d3.select("#systemTooltip");
 		div.transition().duration(200).style("opacity", 0);
 	}).on("drag", function(d) {
+		if (!$('#wholeBoard').hasClass("editOn")) {
+			return;
+		}
 		var boardOffset = $("#wholeBoard").offset();
 		var x = d3.event.sourceEvent.pageX - boardOffset.left;
 		var y = d3.event.sourceEvent.pageY - boardOffset.top;
@@ -54,7 +60,12 @@ NodeUpdateRenderer = function(syncDashboard) {
 
 		d.xRatio = xRatio;
 		d.yRatio = yRatio;
-	}).on("dragend", syncDashboard);
+	}).on("dragend", function() {
+		if (!$('#wholeBoard').hasClass("editOn")) {
+			return;
+		}
+		syncDashboard();
+	});
 
 	this.redraw = function(systems) {
 		if (systems == null) {
@@ -82,14 +93,17 @@ NodeUpdateRenderer = function(syncDashboard) {
 			var div = d3.select("#systemTooltip");
 
 			div.transition().duration(200).style("opacity", 1);
-
-			div.html(d.name).style("left", (d3.event.pageX) + "px").style("top", (d3.event.pageY - 28) + "px");
+			var offset = $(this).offset();
+			div.html(d.name).style("left", offset.left + 40 + "px").style("top", offset.top - 30 + "px");
 		}).on("mouseout", function() {
 			var div = d3.select("#systemTooltip");
 			div.transition().style("opacity", 0);
 		}).on("click", function(d) {
 			if (d3.select(this).classed("editOn")) {
-				$("#removeSystem-confirm").data("clickedSystem", this).dialog("open");
+				if (d3.event.button == 1) {
+					// middle button
+					$("#removeSystem-confirm").data("clickedSystem", this).dialog("open");
+				}
 			} else {
 				window.top.location.href = d.pageToGoTo;
 			}

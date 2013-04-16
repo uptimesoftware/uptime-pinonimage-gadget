@@ -1,40 +1,49 @@
-#systemTooltip{
-	background-color: rgba(0,0,0,0.6);	
+#systemTooltip {
+	background-color: rgba(0, 0, 0, 0.6);
 	border: 2px #AC15E8 solid;
-	border-radius:5px;
+	border-radius: 5px;
 	color: white;
 	padding: 3px;
 }
 
 #editPanel {
 	border: 2px #35D233 solid;
-	border-radius:15px;
+	border-radius: 15px;
 	height: 130px;
 	padding: 10px;
 	background-color: #D1F2D0;
 }
 
-#wholeBoard.editOn{
-	cursor:crosshair;
+#wholeBoard.editOn {
+	cursor: crosshair;
 }
+
 table {
-border: 10px solid red;
+	border: 10px solid red;
 }
-.mapNode:hover{
-	cursor:pointer;
+
+.mapNode:hover {
+	cursor: pointer;
 	opacity: .4;
-	fill:   #FF8000;
+	fill: #FF8000;
+	stroke: #FF8000;
+}
+
+.mapNode.editOn:hover {
+	cursor: move;
+	opacity: .4;
+	fill: #FF8000;
 	stroke: #FF8000;
 }
 
 circle.myRed {
 	stroke: #660000;
-	fill:   #FF8000;
+	fill: #FF8000;
 	r: 30px;
 	height: 120%;
 	width: 120%;
 }
 
-AddNodeInputs{
-	clear:left;
+AddNodeInputs {
+	clear: left;
 }

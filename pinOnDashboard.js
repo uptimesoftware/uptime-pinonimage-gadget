@@ -135,6 +135,18 @@ $(function() {
 		$("#createNode").dialog("open");
 	});
 
+	$(document).keydown(function(e) {
+		if (e.which == 16) {
+			$(this).addClass("editOn");
+			d3.selectAll(".editable").classed("editOn", true);
+		}
+	}).keyup(function(e) {
+		if (e.which == 16) {
+			$(this).removeClass("editOn");
+			d3.selectAll(".editable").classed("editOn", false);
+		}
+	});
+
 	$("#closeEdit").click(function(e) {
 		hideEditPanel();
 	});
@@ -144,7 +156,6 @@ $(function() {
 
 		$("#editPanel").slideUp();
 	}
-	;
 
 	function syncDashboard() {
 		var systems = {};
@@ -157,7 +168,6 @@ $(function() {
 
 	function showEditPanel() {
 		$("#editPanel").slideDown();
-		$(".editable").addClass("editOn");
 		d3.selectAll(".editable").classed("editOn", true);
 
 		$("statusBar").hide();
@@ -183,9 +193,7 @@ $(function() {
 		if (settings) {
 			$.each(settings, function(key, value) {
 				var $ctrl = $('#myForm [name=' + key + ']');
-
 				$ctrl.val(value);
-
 			});
 
 			$("#loadedPanel").show();
