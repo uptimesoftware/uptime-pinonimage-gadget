@@ -1,5 +1,23 @@
 NodeUpdateRenderer = function(syncDashboard) {
 
+	var getWorstStatus = function(monitorStatuses) {
+		var worstMonitorStatus = "";
+		$.each(monitorStatuses, function(i, monitor) {
+			if (monitor.status == "MAINT" || worstMonitorStatus == "MAINT") {
+				worstMonitorStatus = "MAINT";
+			} else if (monitor.status == "CRIT" || worstMonitorStatus == "CRIT") {
+				worstMonitorStatus = "CRIT";
+			} else if (monitor.status == "WARN" || worstMonitorStatus == "WARN") {
+				worstMonitorStatus = "WARN";
+			} else if (monitor.status == "UNKNOWN" || worstMonitorStatus == "UNKNOWN") {
+				worstMonitorStatus = "UNKNOWN";
+			} else if (monitor.status == "OK" || worstMonitorStatus == "OK") {
+				worstMonitorStatus = "OK";
+			}
+		});
+		return worstMonitorStatus;
+	};
+
 	setInterval(function() {
 		d3.selectAll("circle").each(function(d) {
 			var circle = $(this);
@@ -79,24 +97,6 @@ NodeUpdateRenderer = function(syncDashboard) {
 		}).call(drag);
 
 		circles.exit().remove();
-	};
-
-	var getWorstStatus = function(monitorStatuses) {
-		var worstMonitorStatus = "";
-		$.each(monitorStatuses, function(i, monitor) {
-			if (monitor.status == "MAINT" || worstMonitorStatus == "MAINT") {
-				worstMonitorStatus = "MAINT";
-			} else if (monitor.status == "CRIT" || worstMonitorStatus == "CRIT") {
-				worstMonitorStatus = "CRIT";
-			} else if (monitor.status == "WARN" || worstMonitorStatus == "WARN") {
-				worstMonitorStatus = "WARN";
-			} else if (monitor.status == "UNKNOWN" || worstMonitorStatus == "UNKNOWN") {
-				worstMonitorStatus = "UNKNOWN";
-			} else if (monitor.status == "OK" || worstMonitorStatus == "OK") {
-				worstMonitorStatus = "OK";
-			}
-		});
-		return worstMonitorStatus;
 	};
 
 	var getColour = function(status) {

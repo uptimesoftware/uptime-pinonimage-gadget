@@ -1,4 +1,4 @@
-NewNodeDialogue = function() {
+NewNodeDialog = function() {
 	var availableGroups = {};
 	var availableElements = {};
 
@@ -19,6 +19,21 @@ NewNodeDialogue = function() {
 		}
 	});
 
+	var getNewSystemInfo = function() {
+		var info = new Object();
+		info.type = $("input[name=nodeType]:checked").val();
+		info.id = $("#nodeSelectOption option:selected").val();
+		info.name = $("#nodeSelectOption option:selected").text().trim();
+		return info;
+	};
+
+	var populateProfileDestination = function(elementUrls) {
+		$(".DestinationSelectionOption").empty();
+		$(".DestinationSelectionOption").append('<option value="' + elementUrls.info + '">Info Page</option>');
+		$(".DestinationSelectionOption").append('<option value="' + elementUrls.services + '">Services Page</option>');
+		$(".DestinationSelectionOption").append('<option value="' + elementUrls.graphing + '">Graphing Page</option>');
+	};
+
 	// FIXME use naturalSort
 	var sortByHostname = function(attributeToSortBy) {
 		return function(a, b) {
@@ -28,10 +43,10 @@ NewNodeDialogue = function() {
 		};
 	};
 
-	var populateDashboardUrls = function(dashboardUrls){
+	var populateDashboardUrls = function(dashboardUrls) {
 		$(".DestinationSelectionOption").empty();
-		$.each(dashboardUrls, function(index, value){
-			$(".DestinationSelectionOption").append('<option value="'+ value.url + '">' + value.name+ '</option>');
+		$.each(dashboardUrls, function(index, value) {
+			$(".DestinationSelectionOption").append('<option value="' + value.url + '">' + value.name + '</option>');
 		});
 	};
 
@@ -53,7 +68,7 @@ NewNodeDialogue = function() {
 		}
 	};
 
-	this.openDialogue = function() {
+	this.openDialog = function() {
 		$("#createNode").dialog("open");
 	};
 
@@ -120,21 +135,6 @@ NewNodeDialogue = function() {
 		} else {
 			uptimeGadget.listDashboards(populateDashboardUrls);
 		}
-	};
-
-	var getNewSystemInfo = function() {
-		var info = new Object();
-		info.type = $("input[name=nodeType]:checked").val();
-		info.id = $("#nodeSelectOption option:selected").val();
-		info.name = $("#nodeSelectOption option:selected").text().trim();
-		return info;
-	};
-	
-	var populateProfileDestination = function(elementUrls) {
-		$(".DestinationSelectionOption").empty();
-		$(".DestinationSelectionOption").append('<option value="' + elementUrls.info + '">Info Page</option>');
-		$(".DestinationSelectionOption").append('<option value="' + elementUrls.services + '">Services Page</option>');
-		$(".DestinationSelectionOption").append('<option value="' + elementUrls.graphing + '">Graphing Page</option>');
 	};
 
 };

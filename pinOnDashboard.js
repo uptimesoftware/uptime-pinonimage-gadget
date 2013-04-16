@@ -2,7 +2,7 @@ $(function() {
 	var allSettings = {};
 	var width = 0;
 	var height = 0;
-	var newNodeDialogue = new NewNodeDialogue();
+	var newNodeDialog = new NewNodeDialog();
 	var updateRenderer = new NodeUpdateRenderer(syncDashboard);
 	uptimeGadget.loadSettings(goodLoad, onBadAjax);
 	$("#editPanel").hide();
@@ -26,9 +26,9 @@ $(function() {
 
 	uptimeGadget.registerOnEditHandler(showEditPanel);
 	getBackgroundSelection();
-	newNodeDialogue.populateDropdowns();
-	$(".PageTypeRadios").on("click", newNodeDialogue.showDestinationSelection);
-	$(".NodeTypeRadios").on("click", newNodeDialogue.showNodeSelection);
+	newNodeDialog.populateDropdowns();
+	$(".PageTypeRadios").on("click", newNodeDialog.showDestinationSelection);
+	$(".NodeTypeRadios").on("click", newNodeDialog.showNodeSelection);
 
 	function resizeBoard(width, height) {
 		$("#wholeBoard").css("width", width);
@@ -48,7 +48,7 @@ $(function() {
 		buttons : {
 			"Pin on " : function() {
 
-				var newSystem = newNodeDialogue.getNewSystem($(this));
+				var newSystem = newNodeDialog.getNewSystem($(this));
 
 				if (allSettings["systems"] == null) {
 					allSettings["systems"] = {};
