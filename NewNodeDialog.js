@@ -34,12 +34,11 @@ NewNodeDialog = function() {
 		$(".DestinationSelectionOption").append('<option value="' + elementUrls.graphing + '">Graphing Page</option>');
 	};
 
-	// FIXME use naturalSort
 	var sortByHostname = function(attributeToSortBy) {
 		return function(a, b) {
 			var hostname1 = a[attributeToSortBy];
 			var hostname2 = b[attributeToSortBy];
-			return ((hostname1 < hostname2) ? -1 : ((hostname1 > hostname2) ? 1 : 0));
+			return naturalSort(hostname1, hostname2);
 		};
 	};
 
