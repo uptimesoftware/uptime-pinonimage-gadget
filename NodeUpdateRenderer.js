@@ -107,7 +107,8 @@ NodeUpdateRenderer = function(syncDashboard) {
 		}).attr("r", "15px").attr("stroke", function(d) {
 			return getColour(d.elementStatus);
 		}).attr("stroke-width", 8).attr("fill", function(d) {
-			return getColour(d.worstMonitorStatus);
+			return getColour(d.worstMonitorStatus); // FIXME no
+													// worstMonitorStatus
 		}).on("mouseover", function(d) {
 			var div = d3.select("#systemTooltip");
 			div.transition().duration(200).style("opacity", 1);

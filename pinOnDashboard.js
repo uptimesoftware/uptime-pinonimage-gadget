@@ -56,7 +56,6 @@ $(function() {
 				allSettings["systems"][newSystem.d3Id] = newSystem;
 				uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
 				updateRenderer.redraw(allSettings["systems"]);
-				d3.selectAll(".editable").classed("editOn", true);
 
 				$(this).dialog("close");
 			},
@@ -101,11 +100,9 @@ $(function() {
 				var systems = allSettings["systems"];
 				var selectedSystem = d3.select($(this).data("clickedSystem"));
 				var d3Id = selectedSystem.property("__data__").d3Id;
-				if (selectedSystem.classed("editOn")) {
-					delete systems[d3Id];
-					uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
-					updateRenderer.redraw(systems);
-				}
+				delete systems[d3Id];
+				uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+				updateRenderer.redraw(systems);
 
 				$(this).dialog("close");
 			},
