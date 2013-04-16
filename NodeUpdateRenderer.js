@@ -67,6 +67,25 @@ NodeUpdateRenderer = function(syncDashboard) {
 		syncDashboard();
 	});
 
+	var getColour = function(status) {
+		if (status == "OK") {
+			return "green";
+		}
+		if (status == "MAINT") {
+			return "blue";
+		}
+		if (status == "CRIT") {
+			return "red";
+		}
+		if (status == "WARN") {
+			return "yellow";
+		}
+		if (status == "UNKNOWN") {
+			return "Gainsboro";
+		}
+		return "Gainsboro";
+	};
+
 	this.redraw = function(systems) {
 		if (systems == null) {
 			return;
@@ -91,7 +110,6 @@ NodeUpdateRenderer = function(syncDashboard) {
 			return getColour(d.worstMonitorStatus);
 		}).on("mouseover", function(d) {
 			var div = d3.select("#systemTooltip");
-
 			div.transition().duration(200).style("opacity", 1);
 			var offset = $(this).offset();
 			div.html(d.name).style("left", offset.left + 40 + "px").style("top", offset.top - 30 + "px");
@@ -111,25 +129,6 @@ NodeUpdateRenderer = function(syncDashboard) {
 		}).call(drag);
 
 		circles.exit().remove();
-	};
-
-	var getColour = function(status) {
-		if (status == "OK") {
-			return "green";
-		}
-		if (status == "MAINT") {
-			return "blue";
-		}
-		if (status == "CRIT") {
-			return "red";
-		}
-		if (status == "WARN") {
-			return "yellow";
-		}
-		if (status == "UNKNOWN") {
-			return "Gainsboro";
-		}
-		return "Gainsboro";
 	};
 
 };

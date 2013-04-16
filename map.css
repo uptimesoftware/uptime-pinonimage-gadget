@@ -24,9 +24,7 @@ table {
 
 .mapNode:hover {
 	cursor: pointer;
-	opacity: .4;
-	fill: #FF8000;
-	stroke: #FF8000;
+	opacity: .6;
 }
 
 .mapNode.editOn:hover {
