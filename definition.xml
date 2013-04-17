@@ -100,7 +100,7 @@
 	<span style="position: fixed" id="systemTooltip">
 		<div class="nodeName"></div>
 		<div class="elementCounts">
-			<div><span class="numElements"></span> Elements</div>
+			<div><span class="numElements"></span> Elements:</div>
 			<table class="elementCounts">
 				<tr><td>MAINT</td><td class="countValue" data-counttype="MAINT"></td></tr>
 				<tr><td>CRIT</td><td class="countValue" data-counttype="CRIT"></td></tr>
@@ -110,7 +110,7 @@
 			</table>
 		</div>
 		<div class="monitorCounts">
-			<div><span class="numMonitors"></span> Monitors</div>
+			<div><span class="numMonitors"></span> Monitors:</div>
 			<table class="monitorCounts">
 				<tr><td>MAINT</td><td class="countValue" data-counttype="MAINT"></td></tr>
 				<tr><td>CRIT</td><td class="countValue" data-counttype="CRIT"></td></tr>
