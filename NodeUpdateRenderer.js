@@ -125,10 +125,16 @@ NodeUpdateRenderer = function(syncDashboard) {
 		}).attr("stroke-width", 8).attr("fill", function(d) {
 			return getColour("UNKNOWN");
 		}).on("mouseover", function(d) {
+			if ($('#wholeBoard').hasClass("editOn")) {
+				return;
+			}
 			var tooltip = d3.select("#systemTooltip");
-			tooltip.style("opacity", 0);
-			var offset = $(this).offset();
-			tooltip.style("left", offset.left + 40 + "px").style("top", offset.top - 30 + "px");
+			tooltip.style("opacity", 0).style("display", "inline");
+			$("#systemTooltip").position({
+				of : $(this),
+				my : "left top",
+				at : "right+40 bottom-10"
+			});
 			tooltip.select(".nodeName").text(d.name);
 			if (d.elementStatusCounts) {
 				var elementCounts = tooltip.select(".elementCounts");
@@ -150,10 +156,10 @@ NodeUpdateRenderer = function(syncDashboard) {
 			} else {
 				tooltip.select(".monitorCounts").style("display", "none");
 			}
-			tooltip.transition().duration(100).style("opacity", 1);
+			tooltip.transition().duration(200).style("opacity", 1);
 		}).on("mouseout", function() {
 			var tooltip = d3.select("#systemTooltip");
-			tooltip.transition().duration(100).style("opacity", 0);
+			tooltip.transition().duration(200).style("opacity", 0).style("display", "none");
 		}).on("click", function(d) {
 			if (d3.select(this).classed("editOn")) {
 				if (d3.event.button == 1) {
