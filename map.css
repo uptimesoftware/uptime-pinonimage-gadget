@@ -1,25 +1,24 @@
 #systemTooltip {
-	background-color: rgba(0, 0, 0, 0.6);
-	border: 2px #AC15E8 solid;
+	border: 2px #BDBDBD solid;
 	border-radius: 5px;
-	color: white;
 	padding: 3px;
+	background-color: #FDFDFD;
+}
+
+#systemTooltip .nodeName {
+	background-color: #BDBDBD;
 }
 
 #editPanel {
-	border: 2px #35D233 solid;
-	border-radius: 15px;
 	height: 130px;
+	border: 2px #BDBDBD solid;
+	border-radius: 5px;
 	padding: 10px;
-	background-color: #D1F2D0;
+	background-color: #FDFDFD;
 }
 
 #wholeBoard.editOn {
 	cursor: crosshair;
-}
-
-table {
-	border: 10px solid red;
 }
 
 .mapNode:hover {

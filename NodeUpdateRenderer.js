@@ -1,21 +1,34 @@
 NodeUpdateRenderer = function(syncDashboard) {
 
-	var getWorstStatus = function(monitorStatuses) {
-		var worstMonitorStatus = "";
-		$.each(monitorStatuses, function(i, monitor) {
-			if (monitor.status == "MAINT" || worstMonitorStatus == "MAINT") {
-				worstMonitorStatus = "MAINT";
-			} else if (monitor.status == "CRIT" || worstMonitorStatus == "CRIT") {
-				worstMonitorStatus = "CRIT";
-			} else if (monitor.status == "WARN" || worstMonitorStatus == "WARN") {
-				worstMonitorStatus = "WARN";
-			} else if (monitor.status == "UNKNOWN" || worstMonitorStatus == "UNKNOWN") {
-				worstMonitorStatus = "UNKNOWN";
-			} else if (monitor.status == "OK" || worstMonitorStatus == "OK") {
-				worstMonitorStatus = "OK";
+	var statusOrder = {
+		'MAINT' : 4,
+		'CRIT' : 3,
+		'WARN' : 2,
+		'UNKNOWN' : 1,
+		'OK' : 0
+	};
+
+	var getStatusStats = function(statuses) {
+		var stats = {
+			worstStatus : "OK",
+			counts : {
+				'MAINT' : 0,
+				'CRIT' : 0,
+				'WARN' : 0,
+				'UNKNOWN' : 0,
+				'OK' : 0,
+				total : 0
 			}
+		};
+		$.each(statuses, function(i, status) {
+			// TODO hidden and monitored filter?
+			if (statusOrder[status.status] > statusOrder[stats.worstStatus]) {
+				stats.worstStatus = status.status;
+			}
+			stats.counts[status.status]++;
+			stats.counts.total++;
 		});
-		return worstMonitorStatus;
+		return stats;
 	};
 
 	setInterval(function() {
@@ -24,15 +37,18 @@ NodeUpdateRenderer = function(syncDashboard) {
 			if (d.elementId) {
 				$.get("/api/v1/elements/" + d.elementId + "/status", function(data) {
 					circle.attr("stroke", getColour(data.status));
-					var worstStatus = getWorstStatus(data.monitorStatus);
-					circle.attr("fill", getColour(worstStatus));
+					var monitorStats = getStatusStats(data.monitorStatus);
+					circle.attr("fill", getColour(monitorStats.worstStatus));
+					d.monitorStatusCounts = monitorStats.counts;
 				});
 			} else if (d.groupId) {
 				$.get("/api/v1/groups/" + d.groupId + "/status", function(data) {
-					var worstElementStatus = getWorstStatus(data.elementStatus);
-					circle.attr("stroke", getColour(worstElementStatus));
-					var worstMonitorStatus = getWorstStatus(data.monitorStatus);
-					circle.attr("fill", getColour(worstMonitorStatus));
+					var elementStats = getStatusStats(data.elementStatus);
+					circle.attr("stroke", getColour(elementStats.worstStatus));
+					d.elementStatusCounts = elementStats.counts;
+					var monitorStats = getStatusStats(data.monitorStatus);
+					circle.attr("fill", getColour(monitorStats.worstStatus));
+					d.monitorStatusCounts = monitorStats.counts;
 				});
 			}
 		});
@@ -86,7 +102,7 @@ NodeUpdateRenderer = function(syncDashboard) {
 		return "Gainsboro";
 	};
 
-	this.redraw = function(systems) {
+	this.update = function(systems) {
 		if (systems == null) {
 			return;
 		}
@@ -105,18 +121,39 @@ NodeUpdateRenderer = function(syncDashboard) {
 		}).attr("cy", function(d) {
 			return d.yRatio + "%";
 		}).attr("r", "15px").attr("stroke", function(d) {
-			return getColour(d.elementStatus);
+			return getColour("UNKNOWN");
 		}).attr("stroke-width", 8).attr("fill", function(d) {
-			return getColour(d.worstMonitorStatus); // FIXME no
-													// worstMonitorStatus
+			return getColour("UNKNOWN");
 		}).on("mouseover", function(d) {
-			var div = d3.select("#systemTooltip");
-			div.transition().duration(200).style("opacity", 1);
+			var tooltip = d3.select("#systemTooltip");
+			tooltip.style("opacity", 0);
 			var offset = $(this).offset();
-			div.html(d.name).style("left", offset.left + 40 + "px").style("top", offset.top - 30 + "px");
+			tooltip.style("left", offset.left + 40 + "px").style("top", offset.top - 30 + "px");
+			tooltip.select(".nodeName").text(d.name);
+			if (d.elementStatusCounts) {
+				var elementCounts = tooltip.select(".elementCounts");
+				elementCounts.style("display", "block").selectAll("td.countValue").each(function() {
+					var cell = $(this);
+					cell.text(d.elementStatusCounts[cell.data('counttype')]);
+				});
+				elementCounts.select('.numElements').text(d.elementStatusCounts.total);
+			} else {
+				tooltip.select(".elementCounts").style("display", "none");
+			}
+			if (d.monitorStatusCounts) {
+				var monitorCounts = tooltip.select(".monitorCounts");
+				monitorCounts.style("display", "block").selectAll("td.countValue").each(function() {
+					var cell = $(this);
+					cell.text(d.monitorStatusCounts[cell.data('counttype')]);
+				});
+				monitorCounts.select('.numMonitors').text(d.monitorStatusCounts.total);
+			} else {
+				tooltip.select(".monitorCounts").style("display", "none");
+			}
+			tooltip.transition().duration(100).style("opacity", 1);
 		}).on("mouseout", function() {
-			var div = d3.select("#systemTooltip");
-			div.transition().style("opacity", 0);
+			var tooltip = d3.select("#systemTooltip");
+			tooltip.transition().duration(100).style("opacity", 0);
 		}).on("click", function(d) {
 			if (d3.select(this).classed("editOn")) {
 				if (d3.event.button == 1) {

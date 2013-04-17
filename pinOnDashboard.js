@@ -47,7 +47,6 @@ $(function() {
 		modal : true,
 		buttons : {
 			"Pin on " : function() {
-
 				var newSystem = newNodeDialog.getNewSystem($(this));
 
 				if (allSettings["systems"] == null) {
@@ -55,7 +54,7 @@ $(function() {
 				}
 				allSettings["systems"][newSystem.d3Id] = newSystem;
 				uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
-				updateRenderer.redraw(allSettings["systems"]);
+				updateRenderer.update(allSettings["systems"]);
 
 				$(this).dialog("close");
 			},
@@ -93,16 +92,16 @@ $(function() {
 			});
 
 			var selectedSystem = d3.select($(this).data("clickedSystem"));
-			$(this).find("span#message").text("Do you want to remove '" + selectedSystem.property("__data__").name + "'?");
+			$(this).find("span#message").text("Do you want to remove '" + selectedSystem.datum().name + "'?");
 		},
 		buttons : {
 			"Remove System" : function(e) {
 				var systems = allSettings["systems"];
 				var selectedSystem = d3.select($(this).data("clickedSystem"));
-				var d3Id = selectedSystem.property("__data__").d3Id;
+				var d3Id = selectedSystem.datum().d3Id;
 				delete systems[d3Id];
 				uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
-				updateRenderer.redraw(systems);
+				updateRenderer.update(systems);
 
 				$(this).dialog("close");
 			},
@@ -185,7 +184,7 @@ $(function() {
 		statusBar.css("color", "green");
 		statusBar.text("Loaded and READY!");
 		statusBar.show().fadeOut(2000);
-		updateRenderer.redraw(allSettings["systems"]);
+		updateRenderer.update(allSettings["systems"]);
 
 		if (settings) {
 			$.each(settings, function(key, value) {
