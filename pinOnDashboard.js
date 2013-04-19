@@ -4,11 +4,11 @@ $(function() {
 	var height = 0;
 	var newNodeDialog = new NewNodeDialog();
 	var updateRenderer = new NodeUpdateRenderer(syncDashboard);
-	uptimeGadget.loadSettings(goodLoad, onBadAjax);
+	uptimeGadget.loadSettings(onGoodLoad, onBadAjax);
 	$("#editPanel").hide();
 
 	uptimeGadget.registerOnLoadHandler(function(onLoadData) {
-		uptimeGadget.loadSettings(goodLoad, onBadAjax);
+		uptimeGadget.loadSettings(onGoodLoad, onBadAjax);
 		width = onLoadData.dimensions.width;
 		height = onLoadData.dimensions.height;
 		resizeBoard(width, height);
@@ -21,11 +21,21 @@ $(function() {
 	});
 
 	uptimeGadget.registerOnUploadSuccessHandler(function(uploadedResource) {
-		getBackgroundSelection();
+		addNewUploadedBackgroundImageToImageSelector(uploadedResource);
 	});
 
 	uptimeGadget.registerOnEditHandler(showEditPanel);
-	getBackgroundSelection();
+
+	$('#backgroundList').imageselector({
+		change : function(e, ui) {
+			var newBackground = ui.url;
+			$("#svgBackground").attr("xlink:href", newBackground);
+			allSettings["background"] = newBackground;
+			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+		}
+	});
+	addUploadedBackgroundImagesToImageSelector();
+
 	newNodeDialog.populateDropdowns();
 	$(".PageTypeRadios").on("click", newNodeDialog.showDestinationSelection);
 	$(".NodeTypeRadios").on("click", newNodeDialog.showNodeSelection);
@@ -34,13 +44,6 @@ $(function() {
 		$("#wholeBoard").css("width", width);
 		$("#wholeBoard").css("height", height);
 	}
-
-	$("#backgroundList").change(function() {
-		var newBackground = $(this).val();
-		$("#svgBackground").attr("xlink:href", newBackground);
-		allSettings["background"] = newBackground;
-		uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
-	});
 
 	$("#createNode").dialog({
 		autoOpen : false,
@@ -169,7 +172,7 @@ $(function() {
 		$("statusBar").hide();
 	}
 
-	function goodLoad(settings) {
+	function onGoodLoad(settings) {
 		if (settings != null) {
 			allSettings = {
 				"systems" : settings.systems || {},
@@ -177,6 +180,7 @@ $(function() {
 			};
 		}
 		$("#loadedPanel").show().fadeOut(3000);
+		$("#backgroundList").imageselector("selectOption", allSettings["background"]);
 		$("#svgBackground").attr("xlink:href", allSettings["background"]);
 
 		var statusBar = $("#statusBar");
@@ -229,13 +233,17 @@ $(function() {
 		}
 	}
 
-	function getBackgroundSelection() {
+	function addNewUploadedBackgroundImageToImageSelector(background) {
+		$("#backgroundList").imageselector("appendOption", background.url, background.name);
+	}
+
+	function addUploadedBackgroundImagesToImageSelector() {
 		uptimeGadget.listResources(populateBackgroundSelection);
 	}
 
 	function populateBackgroundSelection(backgrounds) {
 		$.each(backgrounds, function(index, background) {
-			$("#backgroundList").append('<option value="' + background.url + '">' + background.name + '</option>');
+			$("#backgroundList").imageselector("appendOption", background.url, background.name);
 		});
 	}
 
