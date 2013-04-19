@@ -30,6 +30,7 @@ button.imageselector-button {
 
 div.imageselector-selection-container {
 	background-color: white;
+	overflow-y: auto;
 }
 
 .imageselector-dialog .ui-dialog-titlebar {
