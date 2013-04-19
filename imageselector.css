@@ -1,5 +1,6 @@
 div.imageselector-container {
 	height: 100px;
+	width: 250px;
 	position: relative;
 }
 
@@ -22,6 +23,9 @@ div.imageselector-image-container img {
 
 button.imageselector-button {
 	vertical-align: top;
+	position: absolute;
+	top: 0;
+	right: 0;
 }
 
 div.imageselector-selection-container {
