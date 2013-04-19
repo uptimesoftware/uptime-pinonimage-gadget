@@ -12,10 +12,14 @@
 									.insertAfter(this.element)
 									.wrap(
 											"<div class='imageselector-container'><div class='imageselector-image-container'></div></div>");
-							var selectorButtonContainer = $('<div class="imageselector-button-container"></div>');
-							var selectorButton = $('<div class="imageselector-button"><div class="imageselector-button-icon ui-icon ui-icon-arrowthick-2-ne-sw"></div></div>');
-							selectorButtonContainer.append(selectorButton);
-							this.selectedImage.parent().after(selectorButtonContainer);
+							var selectorButton = $('<button class="imageselector-button">Select Background</button>');
+							this.selectedImage.parent().after(selectorButton);
+							selectorButton.button({
+								icons : {
+									primary : "ui-icon-arrowthick-2-ne-sw"
+								},
+								text : false
+							});
 
 							// create a div to hold the images at the end of the
 							// doc. this is shared by all instances of
@@ -40,8 +44,8 @@
 									modal : true,
 									draggable : false,
 									resizable : false,
-									show : "fold",
-									hide : "fold"
+									show : "fade",
+									hide : "fade"
 								});
 							}
 							var viewportWidth = $(window).width();
