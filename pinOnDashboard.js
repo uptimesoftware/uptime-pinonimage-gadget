@@ -158,7 +158,7 @@ $(function() {
 
 	function syncDashboard() {
 		var systems = {};
-		d3.selectAll("circle").each(function(d) {
+		d3.selectAll("circle.mapNode").each(function(d) {
 			systems[d.d3Id] = d;
 		});
 		allSettings["systems"] = systems;

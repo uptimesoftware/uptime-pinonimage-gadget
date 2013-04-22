@@ -32,7 +32,7 @@ NodeUpdateRenderer = function(syncDashboard) {
 	};
 
 	setInterval(function() {
-		d3.selectAll("circle").each(function(d) {
+		d3.selectAll("circle.mapNode").each(function(d) {
 			var circle = $(this);
 			if (d.elementId) {
 				$.get("/api/v1/elements/" + d.elementId + "/status", function(data) {
@@ -111,7 +111,7 @@ NodeUpdateRenderer = function(syncDashboard) {
 		var systemsAsArray = $.map(systems, function(value, key) {
 			return value;
 		});
-		var circles = svg.selectAll("circle").data(systemsAsArray, function(d) {
+		var circles = svg.selectAll("circle.mapNode").data(systemsAsArray, function(d) {
 			return d.d3Id;
 		});
 		var newSystems = circles.enter().append("circle");
