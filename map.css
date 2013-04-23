@@ -27,18 +27,18 @@
 }
 
 .mapNode.editOn:hover {
-	cursor: move;
+	cursor: pointer;
 	opacity: .4;
 	fill: #FF8000;
 	stroke: #FF8000;
 }
 
-circle.myRed {
-	stroke: #660000;
-	fill: #FF8000;
-	r: 30px;
-	height: 120%;
-	width: 120%;
+.mapNode.editOn.selected:hover {
+	cursor: move;
+}
+
+.mapNode.editOn.dragging:hover {
+	cursor: move;
 }
 
 AddNodeInputs {
@@ -47,4 +47,41 @@ AddNodeInputs {
 
 .countValue {
 	text-align: right;
+}
+
+circle.mapNodeEdit {
+	display: none;
+	fill: none;
+	opacity: 0;
+	stroke: steelblue;
+	stroke-width: 5;
+	stroke-linecap: butt;
+	stroke-dasharray: 10, 5;
+}
+
+circle.mapNodeEdit.selected {
+	fill: none;
+	opacity: 100;
+	stroke: steelblue;
+	stroke-width: 5;
+	stroke-linecap: butt;
+	stroke-dasharray: none;
+}
+
+g.mapNodeAction {
+	display: none;
+	opacity: 0;
+}
+
+g.mapNodeAction svg:hover {
+	opacity: 0.7;
+	cursor: pointer;
+}
+
+.mapNodeAction circle {
+	fill: #CCCCCC;
+	background-color: #CCCCCC;
+	stroke: black;
+	stroke-width: 1;
+	stroke-linecap: butt;
 }

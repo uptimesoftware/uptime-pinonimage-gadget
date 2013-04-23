@@ -1,5 +1,7 @@
 NodeUpdateRenderer = function(syncDashboard) {
 
+	var self = this;
+
 	var statusOrder = {
 		'MAINT' : 4,
 		'CRIT' : 3,
@@ -60,10 +62,14 @@ NodeUpdateRenderer = function(syncDashboard) {
 		}
 		var div = d3.select("#systemTooltip");
 		div.transition().duration(200).style("opacity", 0);
+
 	}).on("drag", function(d) {
 		if (!$('#wholeBoard').hasClass("editOn")) {
 			return;
 		}
+		self.hideEditMapNodeSelectedUi();
+		var mapNode = d3.select(this);
+		mapNode.classed("dragging", true);
 		var boardOffset = $("#wholeBoard").offset();
 		var x = d3.event.sourceEvent.pageX - boardOffset.left;
 		var y = d3.event.sourceEvent.pageY - boardOffset.top;
@@ -71,8 +77,8 @@ NodeUpdateRenderer = function(syncDashboard) {
 		var xRatio = x * 100 / $("#wholeBoard").width();
 		var yRatio = y * 100 / $("#wholeBoard").height();
 
-		d3.select(this).attr("cx", xRatio + '%');
-		d3.select(this).attr("cy", yRatio + '%');
+		mapNode.attr("cx", xRatio + '%');
+		mapNode.attr("cy", yRatio + '%');
 
 		d.xRatio = xRatio;
 		d.yRatio = yRatio;
@@ -80,6 +86,7 @@ NodeUpdateRenderer = function(syncDashboard) {
 		if (!$('#wholeBoard').hasClass("editOn")) {
 			return;
 		}
+		d3.select(this).classed("dragging", false);
 		syncDashboard();
 	});
 
@@ -100,6 +107,88 @@ NodeUpdateRenderer = function(syncDashboard) {
 			return "Gainsboro";
 		}
 		return "Gainsboro";
+	};
+
+	var showSystemTooltip = function(mapNode, systemDatum) {
+		var tooltip = d3.select("#systemTooltip");
+		tooltip.style("opacity", 0).style("display", "inline");
+		$("#systemTooltip").position({
+			of : $(mapNode),
+			my : "left top",
+			at : "right+40 bottom-10"
+		});
+		tooltip.select(".nodeName").text(systemDatum.name);
+		if (systemDatum.elementStatusCounts) {
+			var elementCounts = tooltip.select(".elementCounts");
+			elementCounts.style("display", "block").selectAll("td.countValue").each(function() {
+				var cell = $(this);
+				cell.text(systemDatum.elementStatusCounts[cell.data('counttype')]);
+			});
+			elementCounts.select('.numElements').text(systemDatum.elementStatusCounts.total);
+		} else {
+			tooltip.select(".elementCounts").style("display", "none");
+		}
+		if (systemDatum.monitorStatusCounts) {
+			var monitorCounts = tooltip.select(".monitorCounts");
+			monitorCounts.style("display", "block").selectAll("td.countValue").each(function() {
+				var cell = $(this);
+				cell.text(systemDatum.monitorStatusCounts[cell.data('counttype')]);
+			});
+			monitorCounts.select('.numMonitors').text(systemDatum.monitorStatusCounts.total);
+		} else {
+			tooltip.select(".monitorCounts").style("display", "none");
+		}
+		tooltip.transition().duration(200).style("opacity", 1);
+	};
+
+	var showEditMapNodeHoverUi = function(mapNodeDomElem) {
+		var mapNode = d3.select(mapNodeDomElem);
+		var mapNodeEditCircle = d3.select("svg circle.mapNodeEdit");
+		if (mapNodeEditCircle.classed("selected")) {
+			return;
+		}
+		mapNodeEditCircle.attr("cx", mapNode.attr("cx")).attr("cy", mapNode.attr("cy")).attr("r", 5).style("display", "inline")
+				.transition().attr("r", 30).style("opacity", 100).delay(0).duration(500).ease("elastic");
+	};
+
+	var hideEditMapNodeHoverUi = function() {
+		var mapNodeEditCircle = d3.select("svg circle.mapNodeEdit");
+		if (mapNodeEditCircle.classed("selected")) {
+			return;
+		}
+		mapNodeEditCircle.transition().delay(0).duration(250).attr("r", 5).style("opacity", "0").each("end", function() {
+			d3.select(this).style("display", "none");
+		});
+	};
+
+	var showEditMapNodeSelectedUi = function(mapNodeDomElem) {
+		d3.selectAll("circle.mapNode").classed("selected", false);
+		var mapNode = d3.select(mapNodeDomElem);
+		mapNode.classed("selected", true);
+		var mapNodeEditCircle = d3.select("svg circle.mapNodeEdit");
+		var cx = mapNode.attr("cx");
+		var cy = mapNode.attr("cy");
+		mapNodeEditCircle.classed("selected", true).attr("cx", cx).attr("cy", cy);
+		d3.selectAll("g.mapNodeAction").each(function() {
+			var mapNodeAction = d3.select(this);
+			mapNodeAction.style("display", "inline").style("opacity", 0).attr("transform", "translate(-10, -10)");
+			var svg = mapNodeAction.select("svg");
+			svg.attr("x", cx).attr("y", cy);
+			if (mapNodeAction.classed("mapNodeProperties")) {
+				mapNodeAction.transition().attr("transform", "translate(19, -29)").style("opacity", 1).delay(0).duration(250);
+			}
+			if (mapNodeAction.classed("mapNodeRemove")) {
+				mapNodeAction.transition().attr("transform", "translate(19, 9)").style("opacity", 1).delay(0).duration(250);
+			}
+		});
+	};
+
+	this.hideEditMapNodeSelectedUi = function() {
+		d3.selectAll("circle.mapNode").classed("selected", false);
+		d3.selectAll("svg circle.mapNodeEdit").classed("selected", false).style("display", "none");
+		d3.selectAll("g.mapNodeAction").each(function() {
+			d3.select(this).style("display", "none");
+		});
 	};
 
 	this.update = function(systems) {
@@ -126,38 +215,12 @@ NodeUpdateRenderer = function(syncDashboard) {
 			return getColour("UNKNOWN");
 		}).on("mouseover", function(d) {
 			if ($('#wholeBoard').hasClass("editOn")) {
+				showEditMapNodeHoverUi(this);
 				return;
 			}
-			var tooltip = d3.select("#systemTooltip");
-			tooltip.style("opacity", 0).style("display", "inline");
-			$("#systemTooltip").position({
-				of : $(this),
-				my : "left top",
-				at : "right+40 bottom-10"
-			});
-			tooltip.select(".nodeName").text(d.name);
-			if (d.elementStatusCounts) {
-				var elementCounts = tooltip.select(".elementCounts");
-				elementCounts.style("display", "block").selectAll("td.countValue").each(function() {
-					var cell = $(this);
-					cell.text(d.elementStatusCounts[cell.data('counttype')]);
-				});
-				elementCounts.select('.numElements').text(d.elementStatusCounts.total);
-			} else {
-				tooltip.select(".elementCounts").style("display", "none");
-			}
-			if (d.monitorStatusCounts) {
-				var monitorCounts = tooltip.select(".monitorCounts");
-				monitorCounts.style("display", "block").selectAll("td.countValue").each(function() {
-					var cell = $(this);
-					cell.text(d.monitorStatusCounts[cell.data('counttype')]);
-				});
-				monitorCounts.select('.numMonitors').text(d.monitorStatusCounts.total);
-			} else {
-				tooltip.select(".monitorCounts").style("display", "none");
-			}
-			tooltip.transition().duration(200).style("opacity", 1);
-		}).on("mouseout", function() {
+			showSystemTooltip(this, d);
+		}).on("mouseout", function(d) {
+			hideEditMapNodeHoverUi();
 			var tooltip = d3.select("#systemTooltip");
 			tooltip.transition().duration(200).style("opacity", 0).style("display", "none");
 		}).on("click", function(d) {
@@ -165,7 +228,10 @@ NodeUpdateRenderer = function(syncDashboard) {
 				if (d3.event.button == 1) {
 					// middle button
 					$("#removeSystem-confirm").data("clickedSystem", this).dialog("open");
+					d3.event.stopPropagation();
+					return;
 				}
+				showEditMapNodeSelectedUi(this);
 			} else {
 				window.top.location.href = d.pageToGoTo;
 			}

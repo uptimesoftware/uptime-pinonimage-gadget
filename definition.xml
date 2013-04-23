@@ -31,8 +31,6 @@
 		<a id="closeEdit" href="#"> CLOSE EDIT </a>
 	</div>
 
-
-
 	<div id="createNode" title="Create new system">
 		<form>
 			<label>Add Element or Group? </label>
@@ -75,9 +73,22 @@
 			xmlns:ev="http://www.w3.org/2001/xml-events"
 			preserveAspectRatio="none" width="100%" height="100%"
 			onmousemove="null">
-       <image id="svgBackground" x="0px" y="0px" width="100%"
+       		<image id="svgBackground" x="0px" y="0px" width="100%"
 				height="100%" preserveAspectRatio="none"
 				xlink:href="__UPTIME_GADGET_BASE__/backgrounds/empty.png" />
+			<circle class="mapNodeEdit" cx="0" cy="0" r="1" />
+			<g class="mapNodeAction mapNodeProperties">
+			<svg x="0" y="0" width="20" height="20">
+				<circle cx="10" cy="10" r="10" />
+				<image xlink:href="__UPTIME_GADGET_BASE__/icons/ui-icon-gear.png" x="2" y="1" width="16" height="16" />
+			</svg>
+			</g>
+			<g class="mapNodeAction mapNodeRemove">
+			<svg x="0" y="0" width="20" height="20">
+				<circle cx="10" cy="10" r="10" />
+				<image xlink:href="__UPTIME_GADGET_BASE__/icons/ui-icon-trash.png" x="2" y="2" width="16" height="16" />
+			</svg>
+			</g>
      </svg>
 	</div>
 

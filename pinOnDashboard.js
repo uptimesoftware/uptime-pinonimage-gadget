@@ -143,6 +143,7 @@ $(function() {
 		if (e.which == 16) {
 			$(this).removeClass("editOn");
 			d3.selectAll(".editable").classed("editOn", false);
+			updateRenderer.hideEditMapNodeSelectedUi();
 		}
 	});
 
@@ -152,6 +153,7 @@ $(function() {
 
 	function hideEditPanel() {
 		d3.selectAll(".editable").classed("editOn", false);
+		updateRenderer.hideEditMapNodeSelectedUi();
 
 		$("#editPanel").slideUp();
 	}
