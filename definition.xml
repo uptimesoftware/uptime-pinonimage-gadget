@@ -28,7 +28,7 @@
 		</select> 
 		Click below to ADD new elements.
 		Click on existing elements to remove them.
-		<a id="closeEdit" href="#"> CLOSE EDIT </a>
+		<a id="closeEdit" href="#">CLOSE EDIT</a>
 	</div>
 
 	<div id="mapNodeProperties">
@@ -130,7 +130,9 @@
 			</table>
 		</div>
 	</span>
-
+	
+	<ul id="wholeBoardContextMenu">
+	</ul>
 </body>
 </html>
 		]]>

@@ -4,6 +4,29 @@ $(function() {
 	var height = 0;
 	var newNodeDialog = new NewNodeDialog();
 	var updateRenderer = new NodeUpdateRenderer(syncDashboard, getEditNodePropertiesDialog);
+	var wholeBoardContextMenu = $('#wholeBoardContextMenu').menu().hide();
+	wholeBoardContextMenu.on("menuselect", function(e, ui) {
+		wholeBoardContextMenu.hide();
+		if (ui.item.text() == "Enter Edit Mode") {
+			enterEditMode();
+		}
+		if (ui.item.text() == "Exit Edit Mode") {
+			exitEditMode();
+		}
+	});
+	$('#wholeBoard').on("contextmenu", function(e) {
+		e.preventDefault();
+		if ($(this).hasClass("editOn")) {
+			wholeBoardContextMenu.empty().append('<li><a href="#">Exit Edit Mode</a></li>').menu("refresh");
+		} else {
+			wholeBoardContextMenu.empty().append('<li><a href="#">Enter Edit Mode</a></li>').menu("refresh");
+		}
+		wholeBoardContextMenu.show().position({
+			my : "left top",
+			of : e,
+			collision : "fit"
+		});
+	});
 	uptimeGadget.loadSettings(onGoodLoad, onBadAjax);
 	$("#editPanel").hide();
 
@@ -131,6 +154,7 @@ $(function() {
 	});
 
 	$("#wholeBoard").click(function(e) {
+		wholeBoardContextMenu.hide();
 		if (!$(this).hasClass("editOn")) {
 			return;
 		}
@@ -145,21 +169,29 @@ $(function() {
 			"yRatio" : yRatio
 		});
 
-		mapNodeProperties.dialog("option", "title", "Add a New Map Node");
+		mapNodeProperties.dialog("option", "title", "Add a New Node");
 		mapNodeProperties.dialog("option", "buttons", addNewNodeButtons);
 		mapNodeProperties.dialog("open");
 	});
 
+	function enterEditMode() {
+		$('wholeBoard').addClass("editOn");
+		d3.selectAll(".editable").classed("editOn", true);
+	}
+
+	function exitEditMode() {
+		$('wholeBoard').removeClass("editOn");
+		d3.selectAll(".editable").classed("editOn", false);
+		updateRenderer.hideEditMapNodeSelectedUi();
+	}
+
 	$(document).keydown(function(e) {
 		if (e.which == 16) {
-			$(this).addClass("editOn");
-			d3.selectAll(".editable").classed("editOn", true);
+			enterEditMode();
 		}
 	}).keyup(function(e) {
 		if (e.which == 16) {
-			$(this).removeClass("editOn");
-			d3.selectAll(".editable").classed("editOn", false);
-			updateRenderer.hideEditMapNodeSelectedUi();
+			exitEditMode();
 		}
 	});
 

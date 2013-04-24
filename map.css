@@ -1,6 +1,10 @@
 label {
-    vertical-align: text-bottom;
-    display:inline;
+	vertical-align: text-bottom;
+	display: inline;
+}
+
+.ui-menu {
+	width: 100px;
 }
 
 #mapNodeProperties div.mapNodePropertiesInput {
