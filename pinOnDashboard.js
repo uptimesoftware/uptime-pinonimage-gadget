@@ -12,6 +12,9 @@ $(function() {
 		}
 		if (ui.item.text() == "Exit Edit Mode") {
 			exitEditMode();
+			if ($('#editPanel').is(":visible")) {
+				$("#editPanel").slideUp();
+			}
 		}
 	});
 	$('#wholeBoard').on("contextmenu", function(e) {
@@ -200,9 +203,7 @@ $(function() {
 	});
 
 	function hideEditPanel() {
-		d3.selectAll(".editable").classed("editOn", false);
-		updateRenderer.hideEditMapNodeSelectedUi();
-
+		exitEditMode();
 		$("#editPanel").slideUp();
 	}
 
@@ -239,7 +240,7 @@ $(function() {
 
 	function showEditPanel() {
 		$("#editPanel").slideDown();
-		d3.selectAll(".editable").classed("editOn", true);
+		enterEditMode();
 
 		$("statusBar").hide();
 	}
