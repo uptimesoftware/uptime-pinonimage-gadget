@@ -21,7 +21,7 @@ $(function() {
 		} else {
 			wholeBoardContextMenu.empty().append('<li><a href="#">Enter Edit Mode</a></li>').menu("refresh");
 		}
-		wholeBoardContextMenu.show().position({
+		wholeBoardContextMenu.fadeIn('fast').position({
 			my : "left top",
 			of : e,
 			collision : "fit"
