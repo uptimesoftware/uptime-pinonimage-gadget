@@ -1,3 +1,19 @@
+label {
+    vertical-align: text-bottom;
+    display:inline;
+}
+
+#mapNodeProperties div.mapNodePropertiesInput {
+	padding-bottom: 4px;
+	padding-left: 8px;
+}
+
+#mapNodeProperties div.mapNodePropertiesSection {
+	font-size: larger;
+	font-weight: bold;
+	padding-top: 10px;
+}
+
 #systemTooltip {
 	border: 2px #BDBDBD solid;
 	border-radius: 5px;
@@ -41,7 +57,7 @@
 	cursor: move;
 }
 
-AddNodeInputs {
+.mapNodePropertiesInput {
 	clear: left;
 }
 

@@ -31,36 +31,36 @@
 		<a id="closeEdit" href="#"> CLOSE EDIT </a>
 	</div>
 
-	<div id="createNode" title="Create new system">
+	<div id="mapNodeProperties">
 		<form>
-			<label>Add Element or Group? </label>
-			<div class="NodeTypeRadios">
-				<span> Element/Application </span><input type="radio" name="nodeType" value="element" checked="checked">
-				<span> Group </span><input type="radio" name="nodeType" value="group">
-			</div>
-			<div class="DestinationPageSection">
-			<div class="AddNodeInputs">
-				<label for="system"> Add Node: </label> <select id="nodeSelectOption" name="">
-					<option value="Loading...">Loading...</option>
-				</select>
-			</div>
-
-			<div class="AddNodeInputs">
-				<label>On Click Go To: </label>
-				<div class="PageTypeRadios">
-					<span> Dashboard Page </span><input type="radio" name="Page" checked="checked" value="Dashboard Page">
-					<span> Profile Page </span><input type="radio" name="Page" value="Profile Page">
+			<div class="mapNodePropertiesSection">Node</div>
+			<div id="nodeTypeSection" class="NodeTypeSection">
+				<div class="mapNodePropertiesInput NodeTypeRadios">
+					<label for="nodeTypeElement">Element</label><input id="nodeTypeElement" type="radio" name="nodeType" value="element" checked="checked">
+					<label for="nodeTypeGroup">Group</label><input id="nodeTypeGroup" type="radio" name="nodeType" value="group">
+				</div>
+				<div class="mapNodePropertiesInput">
+					<select id="nodeSelect" name="">
+						<option value="Loading...">Loading...</option>
+					</select>
 				</div>
 			</div>
-			<div class="AddNodeInputs DestinationSelectSection">
-				<span>Choose Page </span>
-				<select class="DestinationSelectionOption" name="destinationSelect">
-					<option value="Loading...">Loading...</option>
-				</select>
-			</div>
+			<div class="mapNodePropertiesSection">When the Node is Clicked, Go To</div>
+			<div class="DestinationPageSection">
+				<div class="mapNodePropertiesInput">
+					<div class="PageTypeRadios">
+						<label for="pageTypeDashboard">Dashboard Page</label><input id="pageTypeDashboard" type="radio" name="PageType" checked="checked" value="dashboard">
+						<label for="pageTypeProfile">Profile Page</label><input id="pageTypeProfile" type="radio" name="PageType" value="profile">
+					</div>
+				</div>
+				<div class="mapNodePropertiesInput DestinationSelectSection">
+					<select id="destinationSelect" class="DestinationSelectionOption" name="destinationSelect">
+						<option value="Loading...">Loading...</option>
+					</select>
+				</div>
 			</div>
 		</form>
-		<span id="noGroupMessage" style="display:none;">No Groups are Created ... </span>
+		<span id="noGroupMessage" style="display:none;">No groups currently exist...</span>
 	</div>
 
 	<div id="statusBar"

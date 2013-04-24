@@ -3,7 +3,7 @@ $(function() {
 	var width = 0;
 	var height = 0;
 	var newNodeDialog = new NewNodeDialog();
-	var updateRenderer = new NodeUpdateRenderer(syncDashboard);
+	var updateRenderer = new NodeUpdateRenderer(syncDashboard, getEditNodePropertiesDialog);
 	uptimeGadget.loadSettings(onGoodLoad, onBadAjax);
 	$("#editPanel").hide();
 
@@ -45,26 +45,28 @@ $(function() {
 		$("#wholeBoard").css("height", height);
 	}
 
-	$("#createNode").dialog({
+	var addNewNodeButtons = {
+		"Pin on" : function() {
+			var newSystem = newNodeDialog.getNewSystem($(this));
+
+			if (allSettings["systems"] == null) {
+				allSettings["systems"] = {};
+			}
+			allSettings["systems"][newSystem.d3Id] = newSystem;
+			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+			updateRenderer.update(allSettings["systems"]);
+
+			$(this).dialog("close");
+		},
+		"Cancel" : function() {
+			$(this).dialog("close");
+		}
+	};
+
+	$("#mapNodeProperties").dialog({
 		autoOpen : false,
 		modal : true,
-		buttons : {
-			"Pin on " : function() {
-				var newSystem = newNodeDialog.getNewSystem($(this));
-
-				if (allSettings["systems"] == null) {
-					allSettings["systems"] = {};
-				}
-				allSettings["systems"][newSystem.d3Id] = newSystem;
-				uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
-				updateRenderer.update(allSettings["systems"]);
-
-				$(this).dialog("close");
-			},
-			"Cancel" : function() {
-				$(this).dialog("close");
-			}
-		},
+		resizable : false,
 		open : function(e, ui) {
 			$(this).parent().find('.ui-dialog-buttonpane button').button({
 				icons : {
@@ -77,6 +79,16 @@ $(function() {
 			});
 		}
 	});
+
+	function removeStatsData(domElem) {
+		var jqData = $(domElem).data();
+		if (jqData.monitorStatusCounts) {
+			delete jqData.monitorStatusCounts;
+		}
+		if (jqData.elementStatusCounts) {
+			delete jqData.elementStatusCounts;
+		}
+	}
 
 	$("#removeSystem-confirm").dialog({
 		autoOpen : false,
@@ -100,9 +112,10 @@ $(function() {
 		buttons : {
 			"Remove System" : function(e) {
 				var systems = allSettings["systems"];
-				var selectedSystem = d3.select($(this).data("clickedSystem"));
-				var d3Id = selectedSystem.datum().d3Id;
+				var selectedDomElem = $(this).data("clickedSystem");
+				var d3Id = d3.select(selectedDomElem).datum().d3Id;
 				delete systems[d3Id];
+				removeStatsData(selectedDomElem);
 				uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
 				updateRenderer.update(systems);
 
@@ -126,12 +139,15 @@ $(function() {
 		var xRatio = x * 100 / $(this).width();
 		var yRatio = y * 100 / $(this).height();
 
-		$("#createNode").data({
+		var mapNodeProperties = $("#mapNodeProperties");
+		mapNodeProperties.data({
 			"xRatio" : xRatio,
 			"yRatio" : yRatio
 		});
 
-		$("#createNode").dialog("open");
+		mapNodeProperties.dialog("option", "title", "Add a New Map Node");
+		mapNodeProperties.dialog("option", "buttons", addNewNodeButtons);
+		mapNodeProperties.dialog("open");
 	});
 
 	$(document).keydown(function(e) {
@@ -165,6 +181,28 @@ $(function() {
 		});
 		allSettings["systems"] = systems;
 		uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+	}
+
+	function updateNode(nodeSettings) {
+		newNodeDialog.updateNode(nodeSettings);
+	}
+
+	function getEditNodePropertiesDialog(nodeSettings, mapNodeDomElem) {
+		var mapNodeProperties = $("#mapNodeProperties");
+		newNodeDialog.setFormFromSettings(nodeSettings);
+		mapNodeProperties.dialog("option", "title", "Edit Node Properties");
+		mapNodeProperties.dialog("option", "buttons", {
+			"OK" : function() {
+				updateNode(nodeSettings);
+				removeStatsData(mapNodeDomElem);
+				syncDashboard();
+				$(this).dialog("close");
+			},
+			"Cancel" : function() {
+				$(this).dialog("close");
+			}
+		});
+		return mapNodeProperties;
 	}
 
 	function showEditPanel() {

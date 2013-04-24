@@ -19,11 +19,11 @@ NewNodeDialog = function() {
 		}
 	});
 
-	var getNewSystemInfo = function() {
+	var getSelectedSystemInfo = function() {
 		var info = new Object();
 		info.type = $("input[name=nodeType]:checked").val();
-		info.id = $("#nodeSelectOption option:selected").val();
-		info.name = $("#nodeSelectOption option:selected").text().trim();
+		info.id = $("#nodeSelect option:selected").val();
+		info.name = $("#nodeSelect option:selected").text().trim();
 		return info;
 	};
 
@@ -55,7 +55,7 @@ NewNodeDialog = function() {
 
 	this.showDestinationSelection = function(event) {
 		var target = $(event.target);
-		if (target.prop("name") == "Page") {
+		if (target.prop("name") == "PageType") {
 			populateDestinationSelection(target);
 		}
 	};
@@ -68,17 +68,19 @@ NewNodeDialog = function() {
 	};
 
 	this.openDialog = function() {
-		$("#createNode").dialog("open");
+		$("#mapNodeProperties").dialog("open");
 	};
 
 	this.getNewSystem = function(mousePointer) {
 		var xRatio = mousePointer.data("xRatio");
 		var yRatio = mousePointer.data("yRatio");
-		var systemInfo = getNewSystemInfo();
-		var pageToGoTo = $(".DestinationSelectionOption option:selected");
+		var systemInfo = getSelectedSystemInfo();
+		var pageType = $("input[name=PageType]:checked").val();
+		var pageToGoTo = $(".DestinationSelectionOption option:selected").val();
 		var newSystem = {
 			"name" : systemInfo.name,
-			"pageToGoTo" : pageToGoTo.val(),
+			"pageType" : pageType,
+			"pageToGoTo" : pageToGoTo,
 			"xRatio" : xRatio,
 			"yRatio" : yRatio
 		};
@@ -88,11 +90,54 @@ NewNodeDialog = function() {
 		return newSystem;
 	};
 
+	this.setFormFromSettings = function(nodeSettings) {
+		if (nodeSettings.elementId) {
+			var radio = $("#nodeTypeElement");
+			radio.prop("checked", true);
+			populateNodeSelection(radio);
+			$("#nodeSelect").val(nodeSettings.elementId);
+		} else {
+			var radio = $("#nodeTypeGroup");
+			radio.prop("checked", true);
+			populateNodeSelection(radio);
+			$("#nodeSelect").val(nodeSettings.groupId);
+		}
+		if (nodeSettings.pageType == "dashboard") {
+			var radio = $("#pageTypeDashboard");
+			radio.prop("checked", true);
+			populateDestinationSelection(radio);
+			$("#destinationSelect").val(nodeSettings.pageToGoTo);
+		} else {
+			var radio = $("#pageTypeProfile");
+			radio.prop("checked", true);
+			populateDestinationSelection(radio);
+			$("#destinationSelect").val(nodeSettings.pageToGoTo);
+		}
+	};
+
+	this.updateNode = function(nodeSettings) {
+		var pageToGoTo = $(".DestinationSelectionOption option:selected").val();
+		var systemInfo = getSelectedSystemInfo();
+		nodeSettings.name = systemInfo.name;
+		nodeSettings.pageType = $("input[name=PageType]:checked").val();
+		nodeSettings.pageToGoTo = pageToGoTo;
+
+		injectIdAttribute(nodeSettings, systemInfo);
+		nodeSettings.d3Id = getD3Id(nodeSettings);
+		return nodeSettings;
+	};
+
 	var injectIdAttribute = function(newSystem, systemInfo) {
 		if (systemInfo.type == "element") {
 			newSystem.elementId = systemInfo.id;
-		} else if (systemInfo.type = "group") {
+			if (newSystem.groupId) {
+				delete newSystem.groupId;
+			}
+		} else if (systemInfo.type == "group") {
 			newSystem.groupId = systemInfo.id;
+			if (newSystem.elementId) {
+				delete newSystem.elementId;
+			}
 		}
 	};
 
@@ -108,7 +153,7 @@ NewNodeDialog = function() {
 	};
 
 	var populateNodeSelection = function(radioSelected) {
-		var nodeList = $("#nodeSelectOption");
+		var nodeList = $("#nodeSelect");
 		nodeList.empty();
 		if (radioSelected.val() == "group") {
 			$.each(availableGroups, function(i, group) {
@@ -122,14 +167,14 @@ NewNodeDialog = function() {
 			});
 		}
 
-		$(".DestinationPageSection").toggle($("#nodeSelectOption option").length != 0);
-		$("#noGroupMessage").toggle($("#nodeSelectOption option").length == 0);
+		$(".DestinationPageSection").toggle($("#nodeSelect option").length != 0);
+		$("#noGroupMessage").toggle($("#nodeSelect option").length == 0);
 	};
 
 	var populateDestinationSelection = function(radioSelected) {
-		var systemInfo = getNewSystemInfo();
+		var systemInfo = getSelectedSystemInfo();
 		var elementUrls = uptimeGadget.getElementUrls(systemInfo.id, systemInfo.name);
-		if (radioSelected.val() == "Profile Page") {
+		if (radioSelected.val() == "profile") {
 			populateProfileDestination(elementUrls);
 		} else {
 			uptimeGadget.listDashboards(populateDashboardUrls);

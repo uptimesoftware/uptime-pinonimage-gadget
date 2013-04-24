@@ -1,4 +1,4 @@
-NodeUpdateRenderer = function(syncDashboard) {
+NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog) {
 
 	var self = this;
 
@@ -41,16 +41,16 @@ NodeUpdateRenderer = function(syncDashboard) {
 					circle.attr("stroke", getColour(data.status));
 					var monitorStats = getStatusStats(data.monitorStatus);
 					circle.attr("fill", getColour(monitorStats.worstStatus));
-					d.monitorStatusCounts = monitorStats.counts;
+					circle.data("monitorStatusCounts", monitorStats.counts);
 				});
 			} else if (d.groupId) {
 				$.get("/api/v1/groups/" + d.groupId + "/status", function(data) {
 					var elementStats = getStatusStats(data.elementStatus);
 					circle.attr("stroke", getColour(elementStats.worstStatus));
-					d.elementStatusCounts = elementStats.counts;
+					circle.data("elementStatusCounts", elementStats.counts);
 					var monitorStats = getStatusStats(data.monitorStatus);
 					circle.attr("fill", getColour(monitorStats.worstStatus));
-					d.monitorStatusCounts = monitorStats.counts;
+					circle.data("monitorStatusCounts", monitorStats.counts);
 				});
 			}
 		});
@@ -112,29 +112,31 @@ NodeUpdateRenderer = function(syncDashboard) {
 	var showSystemTooltip = function(mapNode, systemDatum) {
 		var tooltip = d3.select("#systemTooltip");
 		tooltip.style("opacity", 0).style("display", "inline");
+		var jqMapNode = $(mapNode);
 		$("#systemTooltip").position({
-			of : $(mapNode),
+			of : jqMapNode,
 			my : "left top",
 			at : "right+40 bottom-10"
 		});
 		tooltip.select(".nodeName").text(systemDatum.name);
-		if (systemDatum.elementStatusCounts) {
+		jqMapNodeData = jqMapNode.data();
+		if (jqMapNodeData.elementStatusCounts) {
 			var elementCounts = tooltip.select(".elementCounts");
 			elementCounts.style("display", "block").selectAll("td.countValue").each(function() {
 				var cell = $(this);
-				cell.text(systemDatum.elementStatusCounts[cell.data('counttype')]);
+				cell.text(jqMapNodeData.elementStatusCounts[cell.data('counttype')]);
 			});
-			elementCounts.select('.numElements').text(systemDatum.elementStatusCounts.total);
+			elementCounts.select('.numElements').text(jqMapNodeData.elementStatusCounts.total);
 		} else {
 			tooltip.select(".elementCounts").style("display", "none");
 		}
-		if (systemDatum.monitorStatusCounts) {
+		if (jqMapNodeData.monitorStatusCounts) {
 			var monitorCounts = tooltip.select(".monitorCounts");
 			monitorCounts.style("display", "block").selectAll("td.countValue").each(function() {
 				var cell = $(this);
-				cell.text(systemDatum.monitorStatusCounts[cell.data('counttype')]);
+				cell.text(jqMapNodeData.monitorStatusCounts[cell.data('counttype')]);
 			});
-			monitorCounts.select('.numMonitors').text(systemDatum.monitorStatusCounts.total);
+			monitorCounts.select('.numMonitors').text(jqMapNodeData.monitorStatusCounts.total);
 		} else {
 			tooltip.select(".monitorCounts").style("display", "none");
 		}
@@ -175,9 +177,19 @@ NodeUpdateRenderer = function(syncDashboard) {
 			var svg = mapNodeAction.select("svg");
 			svg.attr("x", cx).attr("y", cy);
 			if (mapNodeAction.classed("mapNodeProperties")) {
+				mapNodeAction.on("click", function() {
+					var nodeSettings = mapNode.datum();
+					var editNodePropertiesDialog = getEditNodePropertiesDialog(nodeSettings, mapNodeDomElem);
+					editNodePropertiesDialog.dialog("open");
+					d3.event.stopPropagation();
+				});
 				mapNodeAction.transition().attr("transform", "translate(19, -29)").style("opacity", 1).delay(0).duration(250);
 			}
 			if (mapNodeAction.classed("mapNodeRemove")) {
+				mapNodeAction.on("click", function() {
+					$("#removeSystem-confirm").data("clickedSystem", mapNodeDomElem).dialog("open");
+					d3.event.stopPropagation();
+				});
 				mapNodeAction.transition().attr("transform", "translate(19, 9)").style("opacity", 1).delay(0).duration(250);
 			}
 		});
