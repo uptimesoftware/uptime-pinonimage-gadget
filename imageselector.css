@@ -2,6 +2,7 @@ div.imageselector-container {
 	height: 100px;
 	width: 250px;
 	position: relative;
+	display: inline-block;
 }
 
 div.imageselector-image-container {

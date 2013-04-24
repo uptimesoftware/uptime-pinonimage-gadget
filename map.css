@@ -30,11 +30,25 @@ label {
 }
 
 #editPanel {
-	height: 130px;
+	height: 120px;
 	border: 2px #BDBDBD solid;
 	border-radius: 5px;
 	padding: 10px;
 	background-color: #FDFDFD;
+}
+
+.editPanelBackgroundList {
+	float: left;
+}
+
+.editPanelExplaination {
+	vertical-align: top;
+	padding-left: 10px;
+	float: left;
+}
+
+.editPanelExitButton {
+	clear: both;
 }
 
 #wholeBoard.editOn {

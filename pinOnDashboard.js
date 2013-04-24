@@ -4,6 +4,9 @@ $(function() {
 	var height = 0;
 	var newNodeDialog = new NewNodeDialog();
 	var updateRenderer = new NodeUpdateRenderer(syncDashboard, getEditNodePropertiesDialog);
+	$("#closeEdit").button().click(function(e) {
+		hideEditPanel();
+	});
 	var wholeBoardContextMenu = $('#wholeBoardContextMenu').menu().hide();
 	wholeBoardContextMenu.on("menuselect", function(e, ui) {
 		wholeBoardContextMenu.hide();
@@ -196,10 +199,6 @@ $(function() {
 		if (e.which == 16) {
 			exitEditMode();
 		}
-	});
-
-	$("#closeEdit").click(function(e) {
-		hideEditPanel();
 	});
 
 	function hideEditPanel() {

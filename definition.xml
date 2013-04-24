@@ -18,17 +18,22 @@
 </head>
 <body>
 	<div id="editPanel">
-		Edit Mode: Select a background: 
+		<div class="editPanelBackgroundList">
 		<select id="backgroundList">
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/datacenter1.jpg">backgrounds/datacenter1.jpg</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/datacenter2.jpg">backgrounds/datacenter2.jpg</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/na_map.jpg">backgrounds/na_map.jpg</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/na_map3.jpg">backgrounds/na_map3.jpg</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/virtual_infrastructure.jpg">backgrounds/virtual_infrastructure.jpg</option>
-		</select> 
-		Click below to ADD new elements.
-		Click on existing elements to remove them.
-		<a id="closeEdit" href="#">CLOSE EDIT</a>
+		</select>
+		</div>
+		<div class="editPanelExplaination">
+		Click below to add new elements.<br>
+		Click on existing elements to modify them.
+		</div>
+		<div class="editPanelExitButton">
+		<button id="closeEdit">Exit Edit Mode</button>
+		</div>
 	</div>
 
 	<div id="mapNodeProperties">
