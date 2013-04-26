@@ -220,7 +220,11 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog) {
 		});
 		var newSystems = circles.enter().append("circle");
 
-		newSystems.attr("class", "mapNode editable").attr("cx", function(d) {
+		var newSystemClasses = "mapNode editable";
+		if ($('#wholeBoard').hasClass("editOn")) {
+			newSystemClasses += " editOn";
+		}
+		newSystems.attr("class", newSystemClasses).attr("cx", function(d) {
 			return d.xRatio + "%";
 		}).attr("cy", function(d) {
 			return d.yRatio + "%";
