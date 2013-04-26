@@ -140,6 +140,7 @@ $(function() {
 		},
 		buttons : {
 			"Remove System" : function(e) {
+				updateRenderer.hideEditMapNodeSelectedUi();
 				var systems = allSettings["systems"];
 				var selectedDomElem = $(this).data("clickedSystem");
 				var d3Id = d3.select(selectedDomElem).datum().d3Id;
