@@ -1,4 +1,4 @@
-NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog) {
+NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, removeSystem) {
 
 	var self = this;
 
@@ -23,7 +23,6 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog) {
 			}
 		};
 		$.each(statuses, function(i, status) {
-			// TODO hidden and monitored filter?
 			if (status.isHidden || !status.isMonitored) {
 				return;
 			}
@@ -45,6 +44,16 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog) {
 					var monitorStats = getStatusStats(data.monitorStatus);
 					circle.attr("fill", getColour(monitorStats.worstStatus));
 					circle.data("monitorStatusCounts", monitorStats.counts);
+				}).fail(function(jqXHR, textStatus, errorThrown) {
+					try {
+						var uptimeError = $.parseJSON(jqXHR.responseText);
+						if (uptimeError.error && uptimeError.error == "UT-1000") {
+							// element does not exist
+							removeSystem(circle.get(0));
+						}
+					} catch (e) {
+						// ignore any other exceptions
+					}
 				});
 			} else if (d.groupId) {
 				$.get("/api/v1/groups/" + d.groupId + "/status", function(data) {
@@ -54,6 +63,16 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog) {
 					var monitorStats = getStatusStats(data.monitorStatus);
 					circle.attr("fill", getColour(monitorStats.worstStatus));
 					circle.data("monitorStatusCounts", monitorStats.counts);
+				}).fail(function(jqXHR, textStatus, errorThrown) {
+					try {
+						var uptimeError = $.parseJSON(jqXHR.responseText);
+						if (uptimeError.error && uptimeError.error == "UT-1002") {
+							// group does not exist
+							removeSystem(circle.get(0));
+						}
+					} catch (e) {
+						// ignore any other exceptions
+					}
 				});
 			}
 		});

@@ -3,7 +3,7 @@ $(function() {
 	var width = 0;
 	var height = 0;
 	var newNodeDialog = new NewNodeDialog();
-	var updateRenderer = new NodeUpdateRenderer(syncDashboard, getEditNodePropertiesDialog);
+	var updateRenderer = new NodeUpdateRenderer(syncDashboard, getEditNodePropertiesDialog, removeSystem);
 	$("#closeEdit").button().click(function(e) {
 		hideEditPanel();
 	});
@@ -119,6 +119,15 @@ $(function() {
 		}
 	}
 
+	function removeSystem(circleDomElem) {
+		var systems = allSettings["systems"];
+		var d3Id = d3.select(circleDomElem).datum().d3Id;
+		delete systems[d3Id];
+		removeStatsData(circleDomElem);
+		uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+		updateRenderer.update(systems);
+	}
+
 	$("#removeSystem-confirm").dialog({
 		autoOpen : false,
 		resizable : false,
@@ -141,13 +150,8 @@ $(function() {
 		buttons : {
 			"Remove System" : function(e) {
 				updateRenderer.hideEditMapNodeSelectedUi();
-				var systems = allSettings["systems"];
 				var selectedDomElem = $(this).data("clickedSystem");
-				var d3Id = d3.select(selectedDomElem).datum().d3Id;
-				delete systems[d3Id];
-				removeStatsData(selectedDomElem);
-				uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
-				updateRenderer.update(systems);
+				removeSystem(selectedDomElem);
 
 				$(this).dialog("close");
 			},
