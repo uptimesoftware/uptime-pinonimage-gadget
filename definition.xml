@@ -11,6 +11,7 @@
 <title>Pin On Image</title>
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/imageselector.css" />
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/map.css" />
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uuid.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/imageselector.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/NewNodeDialog.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/NodeUpdateRenderer.js"></script>

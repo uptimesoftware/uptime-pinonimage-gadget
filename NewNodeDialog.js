@@ -86,7 +86,7 @@ NewNodeDialog = function() {
 		};
 
 		injectIdAttribute(newSystem, systemInfo);
-		newSystem.d3Id = getD3Id(newSystem);
+		newSystem.d3Id = createD3Id();
 		return newSystem;
 	};
 
@@ -123,7 +123,6 @@ NewNodeDialog = function() {
 		nodeSettings.pageToGoTo = pageToGoTo;
 
 		injectIdAttribute(nodeSettings, systemInfo);
-		nodeSettings.d3Id = getD3Id(nodeSettings);
 		return nodeSettings;
 	};
 
@@ -141,15 +140,8 @@ NewNodeDialog = function() {
 		}
 	};
 
-	var getD3Id = function(system) {
-		var elementPrefix = "1";
-		var groupPrefix = "2";
-		if (system.elementId) {
-			return parseInt(elementPrefix + system.elementId);
-		}
-		if (system.groupId) {
-			return parseInt(groupPrefix + system.groupId);
-		}
+	var createD3Id = function() {
+		return uuid.v4();
 	};
 
 	var populateNodeSelection = function(radioSelected) {
