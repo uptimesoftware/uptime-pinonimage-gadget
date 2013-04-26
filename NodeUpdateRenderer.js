@@ -24,6 +24,9 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog) {
 		};
 		$.each(statuses, function(i, status) {
 			// TODO hidden and monitored filter?
+			if (status.isHidden || !status.isMonitored) {
+				return;
+			}
 			if (statusOrder[status.status] > statusOrder[stats.worstStatus]) {
 				stats.worstStatus = status.status;
 			}
