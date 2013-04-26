@@ -162,6 +162,7 @@ $(function() {
 
 	$("#wholeBoard").click(function(e) {
 		wholeBoardContextMenu.hide();
+		updateRenderer.hideEditMapNodeSelectedUi();
 		if (!$(this).hasClass("editOn")) {
 			return;
 		}
