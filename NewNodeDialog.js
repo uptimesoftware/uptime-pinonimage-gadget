@@ -76,6 +76,7 @@ NewNodeDialog = function() {
 		var yRatio = mousePointer.data("yRatio");
 		var systemInfo = getSelectedSystemInfo();
 		var pageType = $("input[name=PageType]:checked").val();
+		populateDestinationSelection($("input[name=PageType]:checked"));
 		var pageToGoTo = $(".DestinationSelectionOption option:selected").val();
 		var newSystem = {
 			"name" : systemInfo.name,
@@ -116,10 +117,11 @@ NewNodeDialog = function() {
 	};
 
 	this.updateNode = function(nodeSettings) {
-		var pageToGoTo = $(".DestinationSelectionOption option:selected").val();
 		var systemInfo = getSelectedSystemInfo();
 		nodeSettings.name = systemInfo.name;
 		nodeSettings.pageType = $("input[name=PageType]:checked").val();
+		populateDestinationSelection($("input[name=PageType]:checked"));
+		var pageToGoTo = $(".DestinationSelectionOption option:selected").val();
 		nodeSettings.pageToGoTo = pageToGoTo;
 
 		injectIdAttribute(nodeSettings, systemInfo);
