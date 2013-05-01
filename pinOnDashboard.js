@@ -188,7 +188,35 @@ $(function() {
 
 	function enterEditMode() {
 		$('wholeBoard').addClass("editOn");
+		var makeTransform = function(scaleFactor) {
+			return function(d, i) {
+				var xScale = 1 + scaleFactor;
+				var yScale = 1 - scaleFactor;
+				var xTrans = this.cx.baseVal.value * -1 * (xScale - 1);
+				var yTrans = this.cy.baseVal.value * -1 * (yScale - 1);
+				return "translate(" + xTrans + "," + yTrans + ") scale(" + xScale + "," + yScale + ")";
+			};
+		};
 		d3.selectAll(".editable").classed("editOn", true);
+		var wobble = function(domNode) {
+			d3.select(domNode).transition().duration(150).ease("cubic-out").attr("transform", makeTransform(0.05)).each(
+					"end",
+					function() {
+						d3.select(this).transition().duration(300).attr("transform", makeTransform(-0.05)).each(
+								"end",
+								function() {
+									d3.select(this).transition().duration(150).ease("cubic-in").attr("transform",
+											makeTransform(0)).each("end", function() {
+										if ($('#wholeBoard').hasClass("editOn")) {
+											wobble(this);
+										}
+									});
+								});
+					});
+		};
+		d3.selectAll("circle.editable").each(function() {
+			wobble(this);
+		});
 	}
 
 	function exitEditMode() {
