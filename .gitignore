@@ -1,4 +1,4 @@
-/target
-/eclipse
-/.settings
-/.project
+target/
+eclipse/
+.settings/
+.project
