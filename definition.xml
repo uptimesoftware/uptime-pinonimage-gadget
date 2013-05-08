@@ -9,8 +9,11 @@
 <head>
 #includeResources(jquery,jqueryui,d3,uptimecss)
 <title>Pin On Image</title>
+<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/number-polyfill.css" />
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/imageselector.css" />
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/map.css" />
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/number-polyfill.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/uuid.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/imageselector.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/NewNodeDialog.js"></script>
@@ -28,9 +31,15 @@
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/virtual_infrastructure.jpg">backgrounds/virtual_infrastructure.jpg</option>
 		</select>
 		</div>
+		<div class="editPanelCol2">
+		<div class="editPanelRefreshRate">
+			<label for="refreshRate">Refresh Interval (s):</label>
+			<input id="refreshRate" type="number" min="5" max="300" value="10" />
+		</div>
 		<div class="editPanelExplaination">
 		Click below to add new elements.<br>
 		Click on existing elements to modify them.
+		</div>
 		</div>
 		<div class="editPanelExitButton">
 		<button id="closeEdit">Exit Edit Mode</button>

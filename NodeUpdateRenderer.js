@@ -1,6 +1,7 @@
 NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, removeSystem) {
 
 	var self = this;
+	var setIntervalId = null;
 
 	var statusOrder = {
 		'MAINT' : 4,
@@ -78,13 +79,13 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 		});
 	};
 
-	this.resetUpdateInterval = function(setIntervalId) {
-		if (setIntervalId) {
+	this.resetUpdateInterval = function(seconds) {
+		if (setIntervalId != null) {
 			clearInterval(setIntervalId);
 		} else {
 			renderSystemData();
 		}
-		return setInterval(renderSystemData, 5000);
+		setIntervalId = setInterval(renderSystemData, seconds * 1000);
 	};
 
 	var drag = d3.behavior.drag().origin(Object).on("dragstart", function(d) {

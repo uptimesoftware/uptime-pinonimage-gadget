@@ -1,5 +1,4 @@
 $(function() {
-	var setIntervalId;
 	var allSettings = {};
 	var width = 0;
 	var height = 0;
@@ -259,7 +258,8 @@ $(function() {
 		if (settings != null) {
 			allSettings = {
 				"systems" : settings.systems || {},
-				"background" : settings.background
+				"background" : settings.background,
+				"refreshInterval" : settings.refreshInterval || 10
 			};
 		}
 		$("#loadedPanel").show().fadeOut(3000);
@@ -271,8 +271,29 @@ $(function() {
 		statusBar.css("color", "green");
 		statusBar.text("Loaded and READY!");
 		statusBar.show().fadeOut(2000);
+		var refreshRate = $("#refreshRate");
+		refreshRate.val(allSettings.refreshInterval || 10);
+		refreshRate.change($.debounce(500, function() {
+			var refreshRate = $(this);
+			var min = parseInt(refreshRate.attr("min"));
+			var max = parseInt(refreshRate.attr("max"));
+			var val = parseInt(refreshRate.val());
+			if (isNaN(val)) {
+				val = 10;
+			}
+			refreshRate.val(val);
+			if (val < min) {
+				refreshRate.val(min);
+			}
+			if (val > max) {
+				refreshRate.val(max);
+			}
+			allSettings.refreshInterval = val;
+			updateRenderer.resetUpdateInterval(allSettings.refreshInterval);
+			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+		}));
 		updateRenderer.update(allSettings["systems"]);
-		setIntervalId = updateRenderer.resetUpdateInterval();
+		updateRenderer.resetUpdateInterval(allSettings.refreshInterval);
 		if (settings) {
 			$.each(settings, function(key, value) {
 				var $ctrl = $('#myForm [name=' + key + ']');
@@ -284,7 +305,6 @@ $(function() {
 		} else {
 			showEditPanel();
 		}
-
 	}
 
 	function onGoodSave(savedSettings) {
