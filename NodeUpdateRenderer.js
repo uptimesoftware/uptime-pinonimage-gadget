@@ -112,6 +112,69 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 		syncDashboard();
 	});
 
+	function Wobbler(dNode) {
+		var domNode = dNode;
+		var wobbleStoppedCallbacks = $.Callbacks();
+
+		var makeTransform = function(scaleFactor) {
+			return function(d, i) {
+				var xScale = 1 + scaleFactor;
+				var yScale = 1 - scaleFactor;
+				var xTrans = this.cx.baseVal.value * -1 * (xScale - 1);
+				var yTrans = this.cy.baseVal.value * -1 * (yScale - 1);
+				return "translate(" + xTrans + "," + yTrans + ") scale(" + xScale + "," + yScale + ")";
+			};
+		};
+
+		this.start = function() {
+			var self = this;
+			if (!domNode || !$('#wholeBoard').hasClass("editOn")) {
+				wobbleStoppedCallbacks.fire();
+				return;
+			}
+			d3.select(domNode).transition().duration(150).ease("cubic-out").attr("transform", makeTransform(0.05)).each(
+					"end",
+					function() {
+						d3.select(this).transition().duration(300).attr("transform", makeTransform(-0.05)).each(
+								"end",
+								function() {
+									d3.select(this).transition().duration(150).ease("cubic-in").attr("transform",
+											makeTransform(0)).each("end", function() {
+										self.start();
+									});
+								});
+					});
+		};
+
+		this.clear = function() {
+			domNode = null;
+		};
+
+		this.addWobbleStoppedListener = wobbleStoppedCallbacks.add;
+		this.removeWobbleStoppedListener = wobbleStoppedCallbacks.remove;
+	}
+
+	var attachWobbler = function(d, i) {
+		if (!this.wobbler) {
+			this.wobbler = new Wobbler(this);
+		}
+		this.wobbler.start();
+	};
+
+	var detachWobblerAndRemove = function(d, i) {
+		if (this.wobbler) {
+			var wobbler = this.wobbler;
+			var domNode = this;
+			wobbler.addWobbleStoppedListener(function() {
+				delete domNode.wobbler;
+				d3.select(domNode).remove();
+			});
+			wobbler.clear();
+		} else {
+			d3.select(this).remove();
+		}
+	};
+
 	var getColour = function(status) {
 		if (status == "OK") {
 			return "green";
@@ -274,9 +337,9 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 				window.top.location.href = d.pageToGoTo;
 			}
 			d3.event.stopPropagation();
-		}).call(drag);
+		}).call(drag).each(attachWobbler);
 
-		circles.exit().remove();
+		circles.exit().each(detachWobblerAndRemove);
 	};
 
 };
