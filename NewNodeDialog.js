@@ -57,13 +57,20 @@ NewNodeDialog = function() {
 		var target = $(event.target);
 		if (target.prop("name") == "PageType") {
 			populateDestinationSelection(target);
+
 		}
 	};
 
 	this.showNodeSelection = function(event) {
 		var target = $(event.target);
 		if (target.prop("name") == "nodeType") {
-			populateNodeSelection($(target));
+			populateNodeSelection(target);
+			if (target.val() == "group") {
+				$('#pageTypeDashboard').click();
+				$('#pageTypeProfile').prop('disabled', true);
+			} else {
+				$('#pageTypeProfile').prop('disabled', false);
+			}
 		}
 	};
 
