@@ -1,4 +1,5 @@
 $(function() {
+	var setIntervalId;
 	var allSettings = {};
 	var width = 0;
 	var height = 0;
@@ -33,7 +34,6 @@ $(function() {
 			collision : "fit"
 		});
 	});
-	uptimeGadget.loadSettings(onGoodLoad, onBadAjax);
 	$("#editPanel").hide();
 
 	uptimeGadget.registerOnLoadHandler(function(onLoadData) {
@@ -272,7 +272,7 @@ $(function() {
 		statusBar.text("Loaded and READY!");
 		statusBar.show().fadeOut(2000);
 		updateRenderer.update(allSettings["systems"]);
-
+		setIntervalId = updateRenderer.resetUpdateInterval();
 		if (settings) {
 			$.each(settings, function(key, value) {
 				var $ctrl = $('#myForm [name=' + key + ']');

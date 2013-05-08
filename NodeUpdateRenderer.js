@@ -35,7 +35,7 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 		return stats;
 	};
 
-	setInterval(function() {
+	var renderSystemData = function() {
 		d3.selectAll("circle.mapNode").each(function(d) {
 			var circle = $(this);
 			if (d.elementId) {
@@ -76,7 +76,16 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 				});
 			}
 		});
-	}, 5000);
+	};
+
+	this.resetUpdateInterval = function(setIntervalId) {
+		if (setIntervalId) {
+			clearInterval(setIntervalId);
+		} else {
+			renderSystemData();
+		}
+		return setInterval(renderSystemData, 5000);
+	};
 
 	var drag = d3.behavior.drag().origin(Object).on("dragstart", function(d) {
 		if (!$('#wholeBoard').hasClass("editOn")) {
