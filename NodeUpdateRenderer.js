@@ -114,6 +114,7 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 
 	function Wobbler(dNode) {
 		var domNode = dNode;
+		var isRunning = false;
 		var wobbleStoppedCallbacks = $.Callbacks();
 
 		var makeTransform = function(scaleFactor) {
@@ -127,9 +128,11 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 		};
 
 		this.start = function() {
+			isRunning = true;
 			var self = this;
 			if (!domNode || !$('#wholeBoard').hasClass("editOn")) {
 				wobbleStoppedCallbacks.fire();
+				isRunning = false;
 				return;
 			}
 			d3.select(domNode).transition().duration(150).ease("cubic-out").attr("transform", makeTransform(0.05)).each(
@@ -148,6 +151,9 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 
 		this.clear = function() {
 			domNode = null;
+			if (!isRunning) {
+				wobbleStoppedCallbacks.fire();
+			}
 		};
 
 		this.addWobbleStoppedListener = wobbleStoppedCallbacks.add;
