@@ -305,6 +305,9 @@ $(function() {
 		} else {
 			showEditPanel();
 		}
+		if (!allSettings.background) {
+			$('#editSettingsHint').fadeIn('slow');
+		}
 	}
 
 	function onGoodSave(savedSettings) {

@@ -7,6 +7,14 @@ label {
 	width: 100px;
 }
 
+#editSettingsHint {
+	font: 150% sans-serif;
+	color: gray;
+	text-anchor: middle;
+	fill: currentColor;
+	display: none;
+}
+
 #mapNodeProperties div.mapNodePropertiesInput {
 	padding-bottom: 4px;
 	padding-left: 8px;

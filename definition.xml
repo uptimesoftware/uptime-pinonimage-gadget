@@ -88,6 +88,7 @@
 			xmlns:ev="http://www.w3.org/2001/xml-events"
 			preserveAspectRatio="none" width="100%" height="100%"
 			onmousemove="null">
+			<text id="editSettingsHint" x="50%" y="35%">Edit Gadget to Select a Background Image</text>
        		<image id="svgBackground" x="0px" y="0px" width="100%"
 				height="100%" preserveAspectRatio="none"
 				xlink:href="__UPTIME_GADGET_BASE__/backgrounds/empty.png" />
