@@ -8,12 +8,12 @@
 							this.element.hide();
 
 							var selectedUrl = this.element.val();
-							this.selectedImage = $('<img src="' + selectedUrl + '">')
-									.insertAfter(this.element)
-									.wrap(
-											"<div class='imageselector-container'><div class='imageselector-image-container'></div></div>");
+							this.selectedImage = $(
+									'<div class="imageselector-image-container" style="background-image: url(\'' + selectedUrl
+											+ '\')"></div>').insertAfter(this.element).wrap(
+									"<div class='imageselector-container'></div>");
 							var selectorButton = $('<button class="imageselector-button">Select Background</button>');
-							this.selectedImage.parent().after(selectorButton);
+							this.selectedImage.after(selectorButton);
 							selectorButton.button({
 								icons : {
 									primary : "ui-icon-arrowthick-2-ne-sw"
@@ -60,21 +60,23 @@
 									function() {
 										var opt = $(this);
 										var image = $('<div class="imageselector-option" data-url="' + opt.val()
-												+ '"><div class="imageselector-image-container"><img src="' + opt.val()
-												+ '" alt="' + opt.text() + '" title="' + opt.text() + '"/></div></div>');
+												+ '"><div class="imageselector-image-container  title="' + opt.text()
+												+ ' style="background-image: url(\'' + opt.val() + '\')"></div></div>');
 										image.appendTo(imageList).wrap('<li></li>');
 										imageSelectorWidget._on(image, {
 											click : "_change"
 										});
 									});
-							this._setSelectedImage(this.element.val());
+							var url = this.element.val();
+							this._setSelectedImage(url);
+							this.selectedImage.css('background-image', "url('" + url + "')");
 							this.selectionDiv.dialog("open");
 						},
 						_change : function(e) {
 							var url = $(e.currentTarget).data('url');
 							this.element.val(url);
 							this._setSelectedImage(url);
-							this.selectedImage.prop('src', url);
+							this.selectedImage.css('background-image', "url('" + url + "')");
 							this._trigger("change", e, {
 								'url' : url
 							});
@@ -89,7 +91,6 @@
 									option.removeClass('selected');
 								}
 							});
-							this.selectedImage.prop('src', url);
 						},
 						appendOption : function(url, name) {
 							this.element.append('<option value="' + url + '">' + name + '</option>');
@@ -99,7 +100,7 @@
 							if ($('div.imageselector-selection-container').length > 0) {
 								this._setSelectedImage(url);
 							}
-							this.selectedImage.prop('src', url);
+							this.selectedImage.css('background-image', "url('" + url + "')");
 						},
 						_destroy : function() {
 							// Use the _destroy method to reverse everything

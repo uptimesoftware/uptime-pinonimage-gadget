@@ -11,15 +11,11 @@ div.imageselector-image-container {
 	overflow: hidden;
 	margin: 0 auto;
 	display: inline-block;
-}
-
-div.imageselector-image-container img {
-	width: auto !important;
-	max-width: 250px !important;
-	min-width: 250px !important;
-	height: 250px !important;
-	margin: 0 auto;
-	display: block;
+	background-color: transparent;
+	background-repeat: no-repeat;
+	background-size: cover;
+	background-position: center;
+	background-attachment: scroll;
 }
 
 button.imageselector-button {
