@@ -24,11 +24,12 @@
 	<div id="editPanel">
 		<div class="editPanelBackgroundList">
 		<select id="backgroundList">
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/datacenter1.jpg">backgrounds/datacenter1.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/datacenter2.jpg">backgrounds/datacenter2.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/na_map.jpg">backgrounds/na_map.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/na_map3.jpg">backgrounds/na_map3.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/virtual_infrastructure.jpg">backgrounds/virtual_infrastructure.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/n_america.png">backgrounds/datacenter1.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/usa.png">backgrounds/datacenter2.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/canada_grey.png">backgrounds/na_map.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/South America.png">backgrounds/na_map3.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/africa.png">backgrounds/virtual_infrastructure.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/Australasia.png">backgrounds/virtual_infrastructure.jpg</option>
 		</select>
 		</div>
 		<div class="editPanelCol2">
