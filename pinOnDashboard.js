@@ -57,6 +57,7 @@ $(function() {
 	$('#backgroundList').imageselector({
 		change : function(e, ui) {
 			var newBackground = ui.url;
+			$("#editSettingsHint").hide();
 			$("#svgBackground").attr("xlink:href", newBackground);
 			allSettings["background"] = newBackground;
 			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
