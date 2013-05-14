@@ -135,13 +135,15 @@ NewNodeDialog = function() {
 	var populateNodeSelection = function(radioSelected) {
 		var nodeList = $("#nodeSelect");
 		nodeList.empty().append($("<option />").val(-1).text("Loading...")).prop('disabled', true);
+		var nodeTypeRadios = $('input[name=nodeType]');
+		nodeTypeRadios.prop('disabled', true);
 
 		var nodeDeferred = null;
 		if (radioSelected.val() == "group") {
 			nodeDeferred = $.ajax("/api/v1/groups", {
 				cache : false,
 				success : function(data, textStatus, jqXHR) {
-					nodeList.empty().prop('disabled', false);
+					nodeList.empty();
 					var availableGroups = data;
 					availableGroups.sort(sortByHostname("name"));
 					$.each(availableGroups, function(i, group) {
@@ -157,7 +159,7 @@ NewNodeDialog = function() {
 			nodeDeferred = $.ajax("/api/v1/elements", {
 				cache : false,
 				success : function(data, textStatus, jqXHR) {
-					nodeList.empty().prop('disabled', false);
+					nodeList.empty();
 					var availableElements = data;
 					availableElements.sort(sortByHostname("hostname"));
 					$.each(availableElements, function(i, element) {
@@ -166,7 +168,10 @@ NewNodeDialog = function() {
 				}
 			});
 		}
-		return UPTIME.pub.gadgets.promises.resolve(nodeDeferred);
+		return UPTIME.pub.gadgets.promises.resolve(nodeDeferred).then(function() {
+			nodeList.prop('disabled', false);
+			nodeTypeRadios.prop('disabled', false);
+		});
 	};
 
 	this.onChangeNodeType = function() {
@@ -189,15 +194,19 @@ NewNodeDialog = function() {
 
 	var populatePageSelection = function(radioSelected) {
 		$(".DestinationSelectionOption").empty().append($("<option />").val(-1).text("Loading...")).prop('disabled', true);
+		var pageTypeRadio = $("input[name=PageType]");
+		pageTypeRadio.prop('disabled', true);
 		if (radioSelected.val() == "profile") {
 			return UPTIME.pub.gadgets.promises.Promise(function(resolve, reject) {
 				populateProfileDestination();
 				$(".DestinationSelectionOption").prop('disabled', false);
+				pageTypeRadio.prop('disabled', false);
 				resolve();
 			});
 		}
 		return uptimeGadget.listDashboards2().then(populateDashboardUrls).then(function() {
 			$(".DestinationSelectionOption").prop('disabled', false);
+			pageTypeRadio.prop('disabled', false);
 		});
 	};
 
