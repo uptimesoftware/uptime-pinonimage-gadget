@@ -1,37 +1,10 @@
 NewNodeDialog = function() {
-	var availableGroups = {};
-	var availableElements = {};
-
-	$.ajax("/api/v1/groups", {
-		cache : false,
-		success : function(data, textStatus, jqXHR) {
-			availableGroups = data;
-			availableGroups.sort(sortByHostname("name"));
-		}
-	});
-
-	$.ajax("/api/v1/elements", {
-		cache : false,
-		success : function(data, textStatus, jqXHR) {
-			availableElements = data;
-			availableElements.sort(sortByHostname("hostname"));
-			populateNodeSelection($("input[name=nodeType]:checked"));
-		}
-	});
-
 	var getSelectedSystemInfo = function() {
 		var info = new Object();
 		info.type = $("input[name=nodeType]:checked").val();
 		info.id = $("#nodeSelect option:selected").val();
 		info.name = $("#nodeSelect option:selected").text().trim();
 		return info;
-	};
-
-	var populateProfileDestination = function(elementUrls) {
-		$(".DestinationSelectionOption").empty();
-		$(".DestinationSelectionOption").append('<option value="' + elementUrls.info + '">Info Page</option>');
-		$(".DestinationSelectionOption").append('<option value="' + elementUrls.services + '">Services Page</option>');
-		$(".DestinationSelectionOption").append('<option value="' + elementUrls.graphing + '">Graphing Page</option>');
 	};
 
 	var sortByHostname = function(attributeToSortBy) {
@@ -42,40 +15,20 @@ NewNodeDialog = function() {
 		};
 	};
 
-	var populateDashboardUrls = function(dashboardUrls) {
-		$(".DestinationSelectionOption").empty();
-		$.each(dashboardUrls, function(index, value) {
-			$(".DestinationSelectionOption").append('<option value="' + value.url + '">' + value.name + '</option>');
-		});
-	};
-
-	this.populateDropdowns = function() {
-		uptimeGadget.listDashboards(populateDashboardUrls);
-	};
-
-	this.showDestinationSelection = function(event) {
-		var target = $(event.target);
-		if (target.prop("name") == "PageType") {
-			populateDestinationSelection(target);
-
+	var getProfilePageUrls = function(nodeType, nodeId, nodeName) {
+		if (nodeType == "group") {
+			return uptimeGadget.getGroupUrls(nodeId, nodeName);
 		}
+		return uptimeGadget.getElementUrls(nodeId, nodeName);
 	};
 
-	this.showNodeSelection = function(event) {
-		var target = $(event.target);
-		if (target.prop("name") == "nodeType") {
-			populateNodeSelection(target);
-			if (target.val() == "group") {
-				$('#pageTypeDashboard').click();
-				$('#pageTypeProfile').prop('disabled', true);
-			} else {
-				$('#pageTypeProfile').prop('disabled', false);
-			}
+	var getSelectedPageToGoTo = function(systemInfo, pageType) {
+		var pageToGoTo = $(".DestinationSelectionOption option:selected").val();
+		if (pageType == "profile") {
+			var urls = getProfilePageUrls(systemInfo.type, systemInfo.id, systemInfo.name);
+			pageToGoTo = urls[pageToGoTo];
 		}
-	};
-
-	this.openDialog = function() {
-		$("#mapNodeProperties").dialog("open");
+		return pageToGoTo;
 	};
 
 	this.getNewSystem = function(mousePointer) {
@@ -83,8 +36,7 @@ NewNodeDialog = function() {
 		var yRatio = mousePointer.data("yRatio");
 		var systemInfo = getSelectedSystemInfo();
 		var pageType = $("input[name=PageType]:checked").val();
-		populateDestinationSelection($("input[name=PageType]:checked"));
-		var pageToGoTo = $(".DestinationSelectionOption option:selected").val();
+		var pageToGoTo = getSelectedPageToGoTo(systemInfo, pageType);
 		var newSystem = {
 			"name" : systemInfo.name,
 			"pageType" : pageType,
@@ -98,28 +50,57 @@ NewNodeDialog = function() {
 		return newSystem;
 	};
 
+	var getProfileSelectionValue = function(url, nodeType, nodeId, nodeName) {
+		var urls = getProfilePageUrls(nodeType, nodeId, nodeName);
+		if (urls.graphing = url) {
+			return "graphing";
+		}
+		if (urls.services = url) {
+			return "services";
+		}
+		return "info";
+	};
+
+	this.setFormForNewNode = function() {
+		var nodeTypeRadio = $("#nodeTypeElement");
+		nodeTypeRadio.prop("checked", true);
+		populateNodeSelection(nodeTypeRadio);
+		var pageTypeRadio = $("#pageTypeDashboard");
+		pageTypeRadio.prop("checked", true);
+		populatePageSelection(pageTypeRadio);
+	};
+
 	this.setFormFromSettings = function(nodeSettings) {
 		if (nodeSettings.elementId) {
 			var radio = $("#nodeTypeElement");
 			radio.prop("checked", true);
-			populateNodeSelection(radio);
-			$("#nodeSelect").val(nodeSettings.elementId);
+			populateNodeSelection(radio).then(function() {
+				$("#nodeSelect").val(nodeSettings.elementId);
+			});
 		} else {
 			var radio = $("#nodeTypeGroup");
 			radio.prop("checked", true);
-			populateNodeSelection(radio);
-			$("#nodeSelect").val(nodeSettings.groupId);
+			populateNodeSelection(radio).then(function() {
+				$("#nodeSelect").val(nodeSettings.groupId);
+			});
 		}
 		if (nodeSettings.pageType == "dashboard") {
 			var radio = $("#pageTypeDashboard");
 			radio.prop("checked", true);
-			populateDestinationSelection(radio);
-			$("#destinationSelect").val(nodeSettings.pageToGoTo);
+			populatePageSelection(radio).then(function() {
+				$("#destinationSelect").val(nodeSettings.pageToGoTo);
+			});
 		} else {
 			var radio = $("#pageTypeProfile");
 			radio.prop("checked", true);
-			populateDestinationSelection(radio);
-			$("#destinationSelect").val(nodeSettings.pageToGoTo);
+			populatePageSelection(radio).then(
+					function() {
+						var nodeId = nodeSettings.elementId ? nodeSettings.elementId : nodeSettings.groupId;
+						var nodeType = nodeSettings.elementId ? "element" : "group";
+						var profileSelectionValue = getProfileSelectionValue(nodeSettings.pageToGoTo, nodeType, nodeId,
+								nodeSettings.name);
+						$("#destinationSelect").val(profileSelectionValue);
+					});
 		}
 	};
 
@@ -127,9 +108,7 @@ NewNodeDialog = function() {
 		var systemInfo = getSelectedSystemInfo();
 		nodeSettings.name = systemInfo.name;
 		nodeSettings.pageType = $("input[name=PageType]:checked").val();
-		populateDestinationSelection($("input[name=PageType]:checked"));
-		var pageToGoTo = $(".DestinationSelectionOption option:selected").val();
-		nodeSettings.pageToGoTo = pageToGoTo;
+		nodeSettings.pageToGoTo = getSelectedPageToGoTo(systemInfo, nodeSettings.pageType);
 
 		injectIdAttribute(nodeSettings, systemInfo);
 		return nodeSettings;
@@ -155,31 +134,74 @@ NewNodeDialog = function() {
 
 	var populateNodeSelection = function(radioSelected) {
 		var nodeList = $("#nodeSelect");
-		nodeList.empty();
+		nodeList.empty().append($("<option />").val(-1).text("Loading...")).prop('disabled', true);
+
+		var nodeDeferred = null;
 		if (radioSelected.val() == "group") {
-			$.each(availableGroups, function(i, group) {
-				if (group.id != 1 && group.name != "My Infrastructure") {
-					nodeList.append($("<option />").val(group.id).text(group.name));
+			nodeDeferred = $.ajax("/api/v1/groups", {
+				cache : false,
+				success : function(data, textStatus, jqXHR) {
+					nodeList.empty().prop('disabled', false);
+					var availableGroups = data;
+					availableGroups.sort(sortByHostname("name"));
+					$.each(availableGroups, function(i, group) {
+						if (group.id != 1 && group.name != "My Infrastructure") {
+							nodeList.append($("<option />").val(group.id).text(group.name));
+						}
+					});
+					$(".DestinationPageSection").toggle($("#nodeSelect option").length != 0);
+					$("#noGroupMessage").toggle($("#nodeSelect option").length == 0);
 				}
 			});
-		} else if (radioSelected.val() == "element") {
-			$.each(availableElements, function(i, element) {
-				nodeList.append($("<option />").val(element.id).text(element.hostname));
+		} else {
+			nodeDeferred = $.ajax("/api/v1/elements", {
+				cache : false,
+				success : function(data, textStatus, jqXHR) {
+					nodeList.empty().prop('disabled', false);
+					var availableElements = data;
+					availableElements.sort(sortByHostname("hostname"));
+					$.each(availableElements, function(i, element) {
+						nodeList.append($("<option />").val(element.id).text(element.hostname));
+					});
+				}
 			});
 		}
-
-		$(".DestinationPageSection").toggle($("#nodeSelect option").length != 0);
-		$("#noGroupMessage").toggle($("#nodeSelect option").length == 0);
+		return UPTIME.pub.gadgets.promises.resolve(nodeDeferred);
 	};
 
-	var populateDestinationSelection = function(radioSelected) {
-		var systemInfo = getSelectedSystemInfo();
-		var elementUrls = uptimeGadget.getElementUrls(systemInfo.id, systemInfo.name);
+	this.onChangeNodeType = function() {
+		populateNodeSelection($(this));
+	};
+
+	var populateProfileDestination = function() {
+		$(".DestinationSelectionOption").empty();
+		$(".DestinationSelectionOption").append('<option value="info">Info Page</option>');
+		$(".DestinationSelectionOption").append('<option value="services">Services Page</option>');
+		$(".DestinationSelectionOption").append('<option value="graphing">Graphing Page</option>');
+	};
+
+	var populateDashboardUrls = function(dashboardUrls) {
+		$(".DestinationSelectionOption").empty();
+		$.each(dashboardUrls, function(index, value) {
+			$(".DestinationSelectionOption").append('<option value="' + value.url + '">' + value.name + '</option>');
+		});
+	};
+
+	var populatePageSelection = function(radioSelected) {
+		$(".DestinationSelectionOption").empty().append($("<option />").val(-1).text("Loading...")).prop('disabled', true);
 		if (radioSelected.val() == "profile") {
-			populateProfileDestination(elementUrls);
-		} else {
-			uptimeGadget.listDashboards(populateDashboardUrls);
+			return UPTIME.pub.gadgets.promises.Promise(function(resolve, reject) {
+				populateProfileDestination();
+				resolve();
+			});
 		}
+		return uptimeGadget.listDashboards2().then(populateDashboardUrls).then(function() {
+			$(".DestinationSelectionOption").prop('disabled', false);
+		});
+	};
+
+	this.onChangePageType = function() {
+		populatePageSelection($(this));
 	};
 
 };

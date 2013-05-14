@@ -64,9 +64,8 @@ $(function() {
 	});
 	addUploadedBackgroundImagesToImageSelector();
 
-	newNodeDialog.populateDropdowns();
-	$(".PageTypeRadios").on("click", newNodeDialog.showDestinationSelection);
-	$(".NodeTypeRadios").on("click", newNodeDialog.showNodeSelection);
+	$(".NodeTypeRadios input").change(newNodeDialog.onChangeNodeType);
+	$(".PageTypeRadios input").change(newNodeDialog.onChangePageType);
 
 	function resizeBoard(width, height) {
 		$("#wholeBoard").css("width", width);
@@ -180,6 +179,7 @@ $(function() {
 			"yRatio" : yRatio
 		});
 
+		newNodeDialog.setFormForNewNode();
 		mapNodeProperties.dialog("option", "title", "Add a New Node");
 		mapNodeProperties.dialog("option", "buttons", addNewNodeButtons);
 		mapNodeProperties.dialog("open");
