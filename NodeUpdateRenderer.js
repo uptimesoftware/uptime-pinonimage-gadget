@@ -193,21 +193,21 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 
 	var getColour = function(status) {
 		if (status == "OK") {
-			return "green";
+			return "#67B10B";
 		}
 		if (status == "MAINT") {
-			return "blue";
+			return "#555B98";
 		}
 		if (status == "CRIT") {
-			return "red";
+			return "#B61211";
 		}
 		if (status == "WARN") {
-			return "yellow";
+			return "#DAD60B";
 		}
 		if (status == "UNKNOWN") {
-			return "Gainsboro";
+			return "#E6E6E6";
 		}
-		return "Gainsboro";
+		return "#E6E6E6";
 	};
 
 	var showSystemTooltip = function(mapNode, systemDatum) {
