@@ -192,6 +192,7 @@ NewNodeDialog = function() {
 		if (radioSelected.val() == "profile") {
 			return UPTIME.pub.gadgets.promises.Promise(function(resolve, reject) {
 				populateProfileDestination();
+				$(".DestinationSelectionOption").prop('disabled', false);
 				resolve();
 			});
 		}
