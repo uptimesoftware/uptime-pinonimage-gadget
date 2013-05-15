@@ -2,37 +2,40 @@ $(function() {
 	var allSettings = {};
 	var width = 0;
 	var height = 0;
+	var canEdit = uptimeGadget.isOwner();
 	var newNodeDialog = new NewNodeDialog();
 	var updateRenderer = new NodeUpdateRenderer(syncDashboard, getEditNodePropertiesDialog, removeSystem);
 	$("#closeEdit").button().click(function(e) {
 		hideEditPanel();
 	});
 	var wholeBoardContextMenu = $('#wholeBoardContextMenu').menu().hide();
-	wholeBoardContextMenu.on("menuselect", function(e, ui) {
-		wholeBoardContextMenu.hide();
-		if (ui.item.text() == "Enter Edit Mode") {
-			enterEditMode();
-		}
-		if (ui.item.text() == "Exit Edit Mode") {
-			exitEditMode();
-			if ($('#editPanel').is(":visible")) {
-				$("#editPanel").slideUp();
+	if (canEdit) {
+		wholeBoardContextMenu.on("menuselect", function(e, ui) {
+			wholeBoardContextMenu.hide();
+			if (ui.item.text() == "Enter Edit Mode") {
+				enterEditMode();
 			}
-		}
-	});
-	$('#wholeBoard').on("contextmenu", function(e) {
-		e.preventDefault();
-		if ($(this).hasClass("editOn")) {
-			wholeBoardContextMenu.empty().append('<li><a href="#">Exit Edit Mode</a></li>').menu("refresh");
-		} else {
-			wholeBoardContextMenu.empty().append('<li><a href="#">Enter Edit Mode</a></li>').menu("refresh");
-		}
-		wholeBoardContextMenu.fadeIn('fast').position({
-			my : "left top",
-			of : e,
-			collision : "fit"
+			if (ui.item.text() == "Exit Edit Mode") {
+				exitEditMode();
+				if ($('#editPanel').is(":visible")) {
+					$("#editPanel").slideUp();
+				}
+			}
 		});
-	});
+		$('#wholeBoard').on("contextmenu", function(e) {
+			e.preventDefault();
+			if ($(this).hasClass("editOn")) {
+				wholeBoardContextMenu.empty().append('<li><a href="#">Exit Edit Mode</a></li>').menu("refresh");
+			} else {
+				wholeBoardContextMenu.empty().append('<li><a href="#">Enter Edit Mode</a></li>').menu("refresh");
+			}
+			wholeBoardContextMenu.fadeIn('fast').position({
+				my : "left top",
+				of : e,
+				collision : "fit"
+			});
+		});
+	}
 	$("#editPanel").hide();
 
 	uptimeGadget.registerOnLoadHandler(function(onLoadData) {
@@ -123,7 +126,11 @@ $(function() {
 		var d3Id = d3.select(circleDomElem).datum().d3Id;
 		delete systems[d3Id];
 		removeStatsData(circleDomElem);
-		uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+		// nodes will be removed if a non-owner user views nodes for which they
+		// do not have permission but we don't want to save those changes.
+		if (canEdit) {
+			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+		}
 		updateRenderer.update(systems);
 	}
 
@@ -304,7 +311,9 @@ $(function() {
 			$("#loadedPanel").show();
 
 		} else {
-			showEditPanel();
+			if (canEdit) {
+				showEditPanel();
+			}
 		}
 		if (!allSettings.background) {
 			$('#editSettingsHint').fadeIn('slow');

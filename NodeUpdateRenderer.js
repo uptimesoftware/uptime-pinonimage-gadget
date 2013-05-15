@@ -49,7 +49,6 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 					try {
 						var uptimeError = $.parseJSON(jqXHR.responseText);
 						if (uptimeError.error && uptimeError.error == "UT-1000") {
-							// element does not exist
 							removeSystem(circle.get(0));
 						}
 					} catch (e) {
@@ -68,7 +67,6 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 					try {
 						var uptimeError = $.parseJSON(jqXHR.responseText);
 						if (uptimeError.error && uptimeError.error == "UT-1002") {
-							// group does not exist
 							removeSystem(circle.get(0));
 						}
 					} catch (e) {
