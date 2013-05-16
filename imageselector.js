@@ -96,6 +96,9 @@
 							this.element.append('<option value="' + url + '">' + name + '</option>');
 						},
 						selectOption : function(url, name) {
+							if (!url) {
+								return;
+							}
 							this.element.val(url);
 							if ($('div.imageselector-selection-container').length > 0) {
 								this._setSelectedImage(url);
