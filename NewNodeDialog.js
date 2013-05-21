@@ -137,6 +137,7 @@ NewNodeDialog = function() {
 		nodeList.empty().append($("<option />").val(-1).text("Loading...")).prop('disabled', true);
 		var nodeTypeRadios = $('input[name=nodeType]');
 		nodeTypeRadios.prop('disabled', true);
+		$('div.mapNodeProperties button.ok').prop('disabled', true).addClass("ui-state-disabled");
 
 		var nodeDeferred = null;
 		if (radioSelected.val() == "group") {
@@ -151,8 +152,6 @@ NewNodeDialog = function() {
 							nodeList.append($("<option />").val(group.id).text(group.name));
 						}
 					});
-					$(".DestinationPageSection").toggle($("#nodeSelect option").length != 0);
-					$("#noGroupMessage").toggle($("#nodeSelect option").length == 0);
 				}
 			});
 		} else {
@@ -171,6 +170,11 @@ NewNodeDialog = function() {
 		return UPTIME.pub.gadgets.promises.resolve(nodeDeferred).then(function() {
 			nodeList.prop('disabled', false);
 			nodeTypeRadios.prop('disabled', false);
+			if ($("#nodeSelect option").length == 0) {
+				$('div.mapNodeProperties button.ok').prop('disabled', true).addClass("ui-state-disabled");
+			} else {
+				$('div.mapNodeProperties button.ok').prop('disabled', false).removeClass("ui-state-disabled");
+			}
 		});
 	};
 

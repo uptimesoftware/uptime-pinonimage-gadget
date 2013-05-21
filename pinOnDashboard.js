@@ -76,8 +76,9 @@ $(function() {
 		$("#wholeBoard").css("height", height);
 	}
 
-	var addNewNodeButtons = {
-		"Pin on" : function() {
+	var addNewNodeButtons = [ {
+		text : "Pin on",
+		click : function() {
 			var newSystem = newNodeDialog.getNewSystem($(this));
 
 			if (allSettings["systems"] == null) {
@@ -89,10 +90,14 @@ $(function() {
 
 			$(this).dialog("close");
 		},
-		"Cancel" : function() {
+		'class' : "ok"
+	}, {
+		text : "Cancel",
+		click : function() {
 			$(this).dialog("close");
 		}
-	};
+
+	} ];
 
 	$("#mapNodeProperties").dialog({
 		autoOpen : false,
@@ -108,7 +113,8 @@ $(function() {
 					primary : 'ui-icon-cancel'
 				}
 			});
-		}
+		},
+		dialogClass : "mapNodeProperties"
 	});
 
 	function removeStatsData(domElem) {
@@ -241,17 +247,21 @@ $(function() {
 		var mapNodeProperties = $("#mapNodeProperties");
 		newNodeDialog.setFormFromSettings(nodeSettings);
 		mapNodeProperties.dialog("option", "title", "Edit Node Properties");
-		mapNodeProperties.dialog("option", "buttons", {
-			"OK" : function() {
+		mapNodeProperties.dialog("option", "buttons", [ {
+			text : "OK",
+			click : function() {
 				updateNode(nodeSettings);
 				removeStatsData(mapNodeDomElem);
 				syncDashboard();
 				$(this).dialog("close");
 			},
-			"Cancel" : function() {
+			'class' : "ok"
+		}, {
+			text : "Cancel",
+			click : function() {
 				$(this).dialog("close");
 			}
-		});
+		} ]);
 		return mapNodeProperties;
 	}
 
