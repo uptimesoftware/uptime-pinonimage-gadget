@@ -208,7 +208,7 @@ NewNodeDialog = function() {
 				resolve();
 			});
 		}
-		return uptimeGadget.listDashboards2().then(populateDashboardUrls).then(function() {
+		return uptimeGadget.listDashboards().then(populateDashboardUrls).then(function() {
 			$(".DestinationSelectionOption").prop('disabled', false);
 			pageTypeRadio.prop('disabled', false);
 		});
