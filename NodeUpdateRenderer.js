@@ -269,7 +269,7 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 		var mapNodeEditCircle = d3.select("svg circle.mapNodeEdit");
 		var cx = mapNode.attr("cx");
 		var cy = mapNode.attr("cy");
-		mapNodeEditCircle.classed("selected", true).attr("cx", cx).attr("cy", cy);
+		mapNodeEditCircle.classed("selected", true).attr("cx", cx).attr("cy", cy).style("display", "inline");
 		d3.selectAll("g.mapNodeAction").each(function() {
 			var mapNodeAction = d3.select(this);
 			mapNodeAction.style("display", "inline").style("opacity", 0).attr("transform", "translate(-10, -10)");
