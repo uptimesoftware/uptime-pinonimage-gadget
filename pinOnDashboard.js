@@ -39,7 +39,7 @@ $(function() {
 	$("#editPanel").hide();
 
 	uptimeGadget.registerOnLoadHandler(function(onLoadData) {
-		uptimeGadget.loadSettings(onGoodLoad, onBadAjax);
+		uptimeGadget.loadSettings().then(onGoodLoad, onBadAjax);
 		width = onLoadData.dimensions.width;
 		height = onLoadData.dimensions.height;
 		resizeBoard(width, height);
@@ -63,7 +63,7 @@ $(function() {
 			$("#editSettingsHint").hide();
 			$("#svgBackground").attr("xlink:href", newBackground);
 			allSettings["background"] = newBackground;
-			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+			uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
 		}
 	});
 	addUploadedBackgroundImagesToImageSelector();
@@ -85,7 +85,7 @@ $(function() {
 				allSettings["systems"] = {};
 			}
 			allSettings["systems"][newSystem.d3Id] = newSystem;
-			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+			uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
 			updateRenderer.update(allSettings["systems"]);
 
 			$(this).dialog("close");
@@ -135,7 +135,7 @@ $(function() {
 		// nodes will be removed if a non-owner user views nodes for which they
 		// do not have permission but we don't want to save those changes.
 		if (canEdit) {
-			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+			uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
 		}
 		updateRenderer.update(systems);
 	}
@@ -236,7 +236,7 @@ $(function() {
 			systems[d.d3Id] = d;
 		});
 		allSettings["systems"] = systems;
-		uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+		uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
 	}
 
 	function updateNode(nodeSettings) {
@@ -308,7 +308,7 @@ $(function() {
 			}
 			allSettings.refreshInterval = val;
 			updateRenderer.resetUpdateInterval(allSettings.refreshInterval);
-			uptimeGadget.saveSettings(allSettings, onGoodSave, onBadAjax);
+			uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
 		}));
 		updateRenderer.update(allSettings["systems"]);
 		updateRenderer.resetUpdateInterval(allSettings.refreshInterval);
@@ -364,7 +364,8 @@ $(function() {
 	}
 
 	function addUploadedBackgroundImagesToImageSelector() {
-		uptimeGadget.listResources(populateBackgroundSelection);
+		uptimeGadget.listResources().then(populateBackgroundSelection, function(error) {/* TODO */
+		});
 	}
 
 	function populateBackgroundSelection(backgrounds) {
