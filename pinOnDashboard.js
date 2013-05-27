@@ -364,8 +364,7 @@ $(function() {
 	}
 
 	function addUploadedBackgroundImagesToImageSelector() {
-		uptimeGadget.listResources().then(populateBackgroundSelection, function(error) {/* TODO */
-		});
+		uptimeGadget.listResources().then(populateBackgroundSelection, onBadAjax);
 	}
 
 	function populateBackgroundSelection(backgrounds) {
