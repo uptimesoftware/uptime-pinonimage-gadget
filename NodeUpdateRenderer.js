@@ -117,6 +117,7 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 			return;
 		}
 		d3.select(this).classed("dragging", false);
+		showEditMapNodeHoverUi(this);
 		syncDashboard();
 	});
 
