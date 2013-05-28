@@ -40,7 +40,9 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 		d3.selectAll("circle.mapNode").each(function(d) {
 			var circle = $(this);
 			if (d.elementId) {
-				$.get("/api/v1/elements/" + d.elementId + "/status", function(data) {
+				$.ajax("/api/v1/elements/" + d.elementId + "/status", {
+					cache : false
+				}).done(function(data, textStatus, jqXHR) {
 					circle.attr("stroke", getColour(data.status));
 					var monitorStats = getStatusStats(data.monitorStatus);
 					circle.attr("fill", getColour(monitorStats.worstStatus));
@@ -56,7 +58,9 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 					}
 				});
 			} else if (d.groupId) {
-				$.get("/api/v1/groups/" + d.groupId + "/status", function(data) {
+				$.get("/api/v1/groups/" + d.groupId + "/status", {
+					cache : false
+				}).done(function(data) {
 					var elementStats = getStatusStats(data.elementStatus);
 					circle.attr("stroke", getColour(elementStats.worstStatus));
 					circle.data("elementStatusCounts", elementStats.counts);
