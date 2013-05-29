@@ -58,7 +58,7 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 					}
 				});
 			} else if (d.groupId) {
-				$.get("/api/v1/groups/" + d.groupId + "/status", {
+				$.ajax("/api/v1/groups/" + d.groupId + "/status", {
 					cache : false
 				}).done(function(data) {
 					var elementStats = getStatusStats(data.elementStatus);
