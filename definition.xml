@@ -49,6 +49,7 @@
 
 	<div id="mapNodeProperties">
 		<form>
+			<div class="mapNodePropertiesError"></div>
 			<div class="mapNodePropertiesSection">Node</div>
 			<div id="nodeTypeSection" class="NodeTypeSection">
 				<div class="mapNodePropertiesInput NodeTypeRadios">
@@ -78,10 +79,6 @@
 		</form>
 		<span id="noGroupMessage" style="display:none;">No groups currently exist...</span>
 	</div>
-
-	<div id="statusBar"
-		style="display: none; width: 100%; font-weight: bold; font-size: larger; position:absolute;">
-		Backend Call Status</div>
 
 	<div id="wholeBoard" class="editable">
 		<svg id="svgChart" xmlns="http://www.w3.org/2000/svg"
@@ -150,6 +147,9 @@
 	
 	<ul id="wholeBoardContextMenu">
 	</ul>
+
+	<div id="statusBar"></div>
+
 </body>
 </html>
 		]]>

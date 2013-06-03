@@ -7,6 +7,14 @@ label {
 	width: 100px;
 }
 
+#statusBar {
+	position: absolute;
+	top: 10px;
+	left: 0px;
+	display: none;
+	width: 100%;
+}
+
 #editSettingsHint {
 	font: 150% sans-serif;
 	color: gray;
@@ -24,6 +32,13 @@ label {
 	font-size: larger;
 	font-weight: bold;
 	padding-top: 10px;
+}
+
+#mapNodeProperties .mapNodePropertiesError {
+	display: none;
+	font-size: larger;
+	font-weight: bold;
+	color: red;
 }
 
 #nodeSelect {

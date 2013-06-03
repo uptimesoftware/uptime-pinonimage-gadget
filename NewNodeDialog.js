@@ -50,6 +50,10 @@ NewNodeDialog = function() {
 		return newSystem;
 	};
 
+	this.cancel = function() {
+		$('#mapNodeProperties .mapNodePropertiesError').empty().hide();
+	};
+
 	var getProfileSelectionValue = function(url, nodeType, nodeId, nodeName) {
 		var urls = getProfilePageUrls(nodeType, nodeId, nodeName);
 		if (urls.graphing = url) {
@@ -168,6 +172,7 @@ NewNodeDialog = function() {
 			});
 		}
 		return UPTIME.pub.gadgets.promises.resolve(nodeDeferred).then(function() {
+			$('#mapNodeProperties .mapNodePropertiesError').empty().hide();
 			nodeList.prop('disabled', false);
 			nodeTypeRadios.prop('disabled', false);
 			if ($("#nodeSelect option").length == 0) {
@@ -175,6 +180,10 @@ NewNodeDialog = function() {
 			} else {
 				$('div.mapNodeProperties button.ok').prop('disabled', false).removeClass("ui-state-disabled");
 			}
+		}, function(error) {
+			$('div.mapNodeProperties button.ok').prop('disabled', true).addClass("ui-state-disabled");
+			var errorSpan = uptimeErrorFormatter.getErrorSpan(error, "Error Communicating with up.time Controller");
+			$('#mapNodeProperties .mapNodePropertiesError').empty().append(errorSpan).slideDown();
 		});
 	};
 

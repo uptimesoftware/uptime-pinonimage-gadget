@@ -4,42 +4,19 @@ $(function() {
 	var height = 0;
 	var canEdit = uptimeGadget.isOwner();
 	var newNodeDialog = new NewNodeDialog();
-	var updateRenderer = new NodeUpdateRenderer(syncDashboard, getEditNodePropertiesDialog, removeSystem);
+	var updateRenderer = new NodeUpdateRenderer(syncDashboard, getEditNodePropertiesDialog, removeSystem, makeErrorFunction,
+			clearErrorStatus);
 	$("#closeEdit").button().click(function(e) {
 		hideEditPanel();
 	});
 	var wholeBoardContextMenu = $('#wholeBoardContextMenu').menu().hide();
 	if (canEdit) {
-		wholeBoardContextMenu.on("menuselect", function(e, ui) {
-			wholeBoardContextMenu.hide();
-			if (ui.item.text() == "Enter Edit Mode") {
-				enterEditMode();
-			}
-			if (ui.item.text() == "Exit Edit Mode") {
-				exitEditMode();
-				if ($('#editPanel').is(":visible")) {
-					$("#editPanel").slideUp();
-				}
-			}
-		});
-		$('#wholeBoard').on("contextmenu", function(e) {
-			e.preventDefault();
-			if ($(this).hasClass("editOn")) {
-				wholeBoardContextMenu.empty().append('<li><a href="#">Exit Edit Mode</a></li>').menu("refresh");
-			} else {
-				wholeBoardContextMenu.empty().append('<li><a href="#">Enter Edit Mode</a></li>').menu("refresh");
-			}
-			wholeBoardContextMenu.fadeIn('fast').position({
-				my : "left top",
-				of : e,
-				collision : "fit"
-			});
-		});
+		installContextMenu();
 	}
 	$("#editPanel").hide();
 
 	uptimeGadget.registerOnLoadHandler(function(onLoadData) {
-		uptimeGadget.loadSettings().then(onGoodLoad, onBadAjax);
+		uptimeGadget.loadSettings().then(onGoodLoad, makeErrorFunction("Error Loading Settings"));
 		width = onLoadData.dimensions.width;
 		height = onLoadData.dimensions.height;
 		resizeBoard(width, height);
@@ -63,7 +40,7 @@ $(function() {
 			$("#editSettingsHint").hide();
 			$("#svgBackground").attr("xlink:href", newBackground);
 			allSettings["background"] = newBackground;
-			uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
+			uptimeGadget.saveSettings(allSettings).then(onGoodSave, makeErrorFunction("Error Saving Settings"));
 		}
 	});
 	addUploadedBackgroundImagesToImageSelector();
@@ -76,6 +53,36 @@ $(function() {
 		$("#wholeBoard").css("height", height);
 	}
 
+	function installContextMenu() {
+		wholeBoardContextMenu.on("menuselect", function(e, ui) {
+			wholeBoardContextMenu.hide();
+			if (ui.item.text() == "Enter Edit Mode") {
+				enterEditMode();
+			}
+			if (ui.item.text() == "Exit Edit Mode") {
+				exitEditMode();
+				if ($('#editPanel').is(":visible")) {
+					$("#editPanel").slideUp();
+				}
+			}
+		});
+		$('#wholeBoard').on("contextmenu", function(e) {
+			e.preventDefault();
+			if ($(this).hasClass("editOn")) {
+				wholeBoardContextMenu.empty().append('<li><a href="#">Exit Edit Mode</a></li>').menu("refresh");
+			} else {
+				wholeBoardContextMenu.empty().append('<li><a href="#">Enter Edit Mode</a></li>').menu("refresh");
+			}
+			if (canEdit) {
+				wholeBoardContextMenu.fadeIn('fast').position({
+					my : "left top",
+					of : e,
+					collision : "fit"
+				});
+			}
+		});
+	}
+
 	var addNewNodeButtons = [ {
 		text : "Pin on",
 		click : function() {
@@ -85,7 +92,7 @@ $(function() {
 				allSettings["systems"] = {};
 			}
 			allSettings["systems"][newSystem.d3Id] = newSystem;
-			uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
+			uptimeGadget.saveSettings(allSettings).then(onGoodSave, makeErrorFunction("Error Saving Settings"));
 			updateRenderer.update(allSettings["systems"]);
 
 			$(this).dialog("close");
@@ -94,6 +101,7 @@ $(function() {
 	}, {
 		text : "Cancel",
 		click : function() {
+			newNodeDialog.cancel();
 			$(this).dialog("close");
 		}
 
@@ -135,7 +143,7 @@ $(function() {
 		// nodes will be removed if a non-owner user views nodes for which they
 		// do not have permission but we don't want to save those changes.
 		if (canEdit) {
-			uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
+			uptimeGadget.saveSettings(allSettings).then(onGoodSave, makeErrorFunction("Error Saving Settings"));
 		}
 		updateRenderer.update(systems);
 	}
@@ -200,6 +208,9 @@ $(function() {
 	});
 
 	function enterEditMode() {
+		if (!canEdit) {
+			return;
+		}
 		$('wholeBoard').addClass("editOn");
 		d3.selectAll(".editable").classed("editOn", true);
 		d3.selectAll("circle.editable").each(function() {
@@ -236,7 +247,7 @@ $(function() {
 			systems[d.d3Id] = d;
 		});
 		allSettings["systems"] = systems;
-		uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
+		uptimeGadget.saveSettings(allSettings).then(onGoodSave, makeErrorFunction("Error Saving Settings"));
 	}
 
 	function updateNode(nodeSettings) {
@@ -266,13 +277,13 @@ $(function() {
 	}
 
 	function showEditPanel() {
+		clearErrorStatus();
 		$("#editPanel").slideDown();
 		enterEditMode();
-
-		$("statusBar").hide();
 	}
 
 	function onGoodLoad(settings) {
+		clearErrorStatus();
 		if (settings != null) {
 			allSettings = {
 				"systems" : settings.systems || {},
@@ -284,11 +295,6 @@ $(function() {
 		$("#backgroundList").imageselector("selectOption", allSettings["background"]);
 		$("#svgBackground").attr("xlink:href", allSettings["background"]);
 
-		var statusBar = $("#statusBar");
-
-		statusBar.css("color", "green");
-		statusBar.text("Loaded and READY!");
-		statusBar.show().fadeOut(2000);
 		var refreshRate = $("#refreshRate");
 		refreshRate.val(allSettings.refreshInterval || 10);
 		refreshRate.change($.debounce(500, function() {
@@ -308,7 +314,7 @@ $(function() {
 			}
 			allSettings.refreshInterval = val;
 			updateRenderer.resetUpdateInterval(allSettings.refreshInterval);
-			uptimeGadget.saveSettings(allSettings).then(onGoodSave, onBadAjax);
+			uptimeGadget.saveSettings(allSettings).then(onGoodSave, makeErrorFunction("Error Saving Settings"));
 		}));
 		updateRenderer.update(allSettings["systems"]);
 		updateRenderer.resetUpdateInterval(allSettings.refreshInterval);
@@ -331,19 +337,39 @@ $(function() {
 	}
 
 	function onGoodSave(savedSettings) {
-		var statusBar = $("#statusBar");
-
-		statusBar.css("color", "green");
-		statusBar.text("Updated settings!");
-		statusBar.show().fadeOut(2000);
+		clearErrorStatus();
 	}
 
-	function onBadAjax(errorObject) {
-		var statusBar = $("#statusBar");
-		statusBar.css("color", "red");
+	function wholeBoardDimOn() {
+		var wholeBoard = $('#wholeBoard');
+		if (wholeBoard.css('opacity') > 0.6) {
+			$('#wholeBoard').fadeTo('slow', 0.3);
+		}
+	}
 
-		statusBar.text(errorObject.code + ": " + errorObject.description);
-		statusBar.show().fadeOut(2000);
+	function wholeBoardDimOff() {
+		var wholeBoard = $('#wholeBoard');
+		if (wholeBoard.css('opacity') < 0.6) {
+			$('#wholeBoard').fadeTo('slow', 1);
+		}
+	}
+
+	function makeErrorFunction(msg) {
+		return function(error) {
+			canEdit = false;
+			var errorBox = uptimeErrorFormatter.getErrorBox(error, msg);
+			var statusBar = $('#statusBar').empty();
+			errorBox.appendTo(statusBar);
+			statusBar.slideDown();
+			hideEditPanel();
+			wholeBoardDimOn();
+		};
+	}
+
+	function clearErrorStatus() {
+		canEdit = uptimeGadget.isOwner();
+		$('#statusBar').slideUp().empty();
+		wholeBoardDimOff();
 	}
 
 	function appendResourceToList(resource) {
@@ -364,10 +390,12 @@ $(function() {
 	}
 
 	function addUploadedBackgroundImagesToImageSelector() {
-		uptimeGadget.listResources().then(populateBackgroundSelection, onBadAjax);
+		uptimeGadget.listResources().then(populateBackgroundSelection,
+				makeErrorFunction("Error Loading User Uploaded Background Images"));
 	}
 
 	function populateBackgroundSelection(backgrounds) {
+		clearErrorStatus();
 		$.each(backgrounds, function(index, background) {
 			$("#backgroundList").imageselector("appendOption", background.url, background.name);
 		});

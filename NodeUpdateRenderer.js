@@ -1,4 +1,4 @@
-NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, removeSystem) {
+NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, removeSystem, makeErrorFunction, clearErrorStatus) {
 
 	var self = this;
 	var setIntervalId = null;
@@ -43,24 +43,31 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 				$.ajax("/api/v1/elements/" + d.elementId + "/status", {
 					cache : false
 				}).done(function(data, textStatus, jqXHR) {
+					clearErrorStatus();
 					circle.attr("stroke", getColour(data.status));
 					var monitorStats = getStatusStats(data.monitorStatus);
 					circle.attr("fill", getColour(monitorStats.worstStatus));
 					circle.data("monitorStatusCounts", monitorStats.counts);
 				}).fail(function(jqXHR, textStatus, errorThrown) {
 					try {
-						var uptimeError = $.parseJSON(jqXHR.responseText);
-						if (uptimeError.error && uptimeError.error == "UT-1000") {
-							removeSystem(circle.get(0));
+						if (UPTIME.pub.errors.isJsonContentType(jqXHR)) {
+							var uptimeError = $.parseJSON(jqXHR.responseText);
+							if (uptimeError.error && uptimeError.error == "UT-1000") {
+								removeSystem(circle.get(0));
+								return;
+							}
 						}
 					} catch (e) {
 						// ignore any other exceptions
 					}
+					var displayError = makeErrorFunction("Error Loading Element Status Data");
+					displayError(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this));
 				});
 			} else if (d.groupId) {
 				$.ajax("/api/v1/groups/" + d.groupId + "/status", {
 					cache : false
 				}).done(function(data) {
+					clearErrorStatus();
 					var elementStats = getStatusStats(data.elementStatus);
 					circle.attr("stroke", getColour(elementStats.worstStatus));
 					circle.data("elementStatusCounts", elementStats.counts);
@@ -69,13 +76,18 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 					circle.data("monitorStatusCounts", monitorStats.counts);
 				}).fail(function(jqXHR, textStatus, errorThrown) {
 					try {
-						var uptimeError = $.parseJSON(jqXHR.responseText);
-						if (uptimeError.error && uptimeError.error == "UT-1002") {
-							removeSystem(circle.get(0));
+						if (UPTIME.pub.errors.isJsonContentType(jqXHR)) {
+							var uptimeError = $.parseJSON(jqXHR.responseText);
+							if (uptimeError.error && uptimeError.error == "UT-1002") {
+								removeSystem(circle.get(0));
+								return;
+							}
 						}
 					} catch (e) {
 						// ignore any other exceptions
 					}
+					var displayError = makeErrorFunction("Error Loading Group Status Data");
+					displayError(UPTIME.pub.errors.toDisplayableJQueryAjaxError(jqXHR, textStatus, errorThrown, this));
 				});
 			}
 		});
