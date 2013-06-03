@@ -7,7 +7,7 @@
 		<![CDATA[ 
 <html>
 <head>
-#includeResources(jquery,jqueryui,d3,uptimecss)
+#includeResources(jquery,jqueryui,d3)
 <title>Pin On Image</title>
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/number-polyfill.css" />
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/imageselector.css" />
