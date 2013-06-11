@@ -288,7 +288,7 @@ $(function() {
 			allSettings = {
 				"systems" : settings.systems || {},
 				"background" : settings.background,
-				"refreshInterval" : settings.refreshInterval || 10
+				"refreshInterval" : settings.refreshInterval || 30
 			};
 		}
 		$("#loadedPanel").show().fadeOut(3000);
@@ -296,23 +296,9 @@ $(function() {
 		$("#svgBackground").attr("xlink:href", allSettings["background"]);
 
 		var refreshRate = $("#refreshRate");
-		refreshRate.val(allSettings.refreshInterval || 10);
+		refreshRate.val(allSettings.refreshInterval || 30);
 		refreshRate.change($.debounce(500, function() {
-			var refreshRate = $(this);
-			var min = parseInt(refreshRate.attr("min"));
-			var max = parseInt(refreshRate.attr("max"));
-			var val = parseInt(refreshRate.val());
-			if (isNaN(val)) {
-				val = 10;
-			}
-			refreshRate.val(val);
-			if (val < min) {
-				refreshRate.val(min);
-			}
-			if (val > max) {
-				refreshRate.val(max);
-			}
-			allSettings.refreshInterval = val;
+			allSettings.refreshInterval = $(this).val();
 			updateRenderer.resetUpdateInterval(allSettings.refreshInterval);
 			uptimeGadget.saveSettings(allSettings).then(onGoodSave, makeErrorFunction("Error Saving Settings"));
 		}));

@@ -99,7 +99,9 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 		} else {
 			renderSystemData();
 		}
-		setIntervalId = setInterval(renderSystemData, seconds * 1000);
+		if (seconds > 0) {
+			setIntervalId = setInterval(renderSystemData, seconds * 1000);
+		}
 	};
 
 	var drag = d3.behavior.drag().origin(Object).on("dragstart", function(d) {

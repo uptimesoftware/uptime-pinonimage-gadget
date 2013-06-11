@@ -9,11 +9,9 @@
 <head>
 #includeResources(jquery,jqueryui,d3)
 <title>Pin On Image</title>
-<link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/number-polyfill.css" />
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/imageselector.css" />
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/map.css" />
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js"></script>
-<script type="text/javascript" src="__UPTIME_GADGET_BASE__/number-polyfill.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/uuid.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/imageselector.js"></script>
 <script type="text/javascript" src="__UPTIME_GADGET_BASE__/NewNodeDialog.js"></script>
@@ -34,8 +32,16 @@
 		</div>
 		<div class="editPanelCol2">
 		<div class="editPanelRefreshRate">
-			<label for="refreshRate">Refresh Interval (s):</label>
-			<input id="refreshRate" type="number" min="5" max="300" value="10" />
+			<label for="refreshRate">Refresh Rate:</label>
+			<select id="refreshRate" class="incident-panel-setting" name="refreshRate">
+				<option value="30">30s</option>
+				<option value="60">1m</option>
+				<option value="300">5m</option>
+				<option value="600">10m</option>
+				<option value="900">15m</option>
+				<option value="3600">1h</option>
+				<option value="-1">Never</option>
+			</select>
 		</div>
 		<div class="editPanelExplaination">
 		Click below to add new elements.<br>
