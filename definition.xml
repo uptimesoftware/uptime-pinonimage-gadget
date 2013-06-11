@@ -2,7 +2,7 @@
 <Module>
 	<ModulePrefs title="Pin On Image"
 		description="Pin elements and applications onto custom images such as maps, site plans or workflow diagrams."
-		thumbnail="thumb.png" /> 
+		thumbnail="pinOnImageThm.png" /> 
 	<Content type="html">
 		<![CDATA[ 
 <html>
