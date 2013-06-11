@@ -166,6 +166,9 @@ NewNodeDialog = function() {
 					var availableElements = data;
 					availableElements.sort(sortByHostname("hostname"));
 					$.each(availableElements, function(i, element) {
+						if (!element.isMonitored) {
+							return;
+						}
 						nodeList.append($("<option />").val(element.id).text(element.hostname));
 					});
 				}
