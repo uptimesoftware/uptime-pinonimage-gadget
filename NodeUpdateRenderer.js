@@ -195,6 +195,11 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 	};
 
 	var detachWobblerAndRemove = function(d, i) {
+		if ($(this).is(':hover')) {
+			self.hideEditMapNodeSelectedUi();
+			var div = d3.select("#systemTooltip");
+			div.transition().duration(200).style("opacity", 0);
+		}
 		if (this.wobbler) {
 			var wobbler = this.wobbler;
 			var domNode = this;
