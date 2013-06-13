@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?> 
 <Module>
 	<ModulePrefs title="Pin On Image"
-		description="Pin elements and applications onto custom images such as maps, site plans or workflow diagrams."
+		description="Pin element and group status onto custom images such as maps, site plans or workflow diagrams."
 		thumbnail="pinOnImageThm.png" /> 
 	<Content type="html">
 		<![CDATA[ 
