@@ -7,12 +7,8 @@ NewNodeDialog = function() {
 		return info;
 	};
 
-	var sortByHostname = function(attributeToSortBy) {
-		return function(a, b) {
-			var hostname1 = a[attributeToSortBy];
-			var hostname2 = b[attributeToSortBy];
-			return naturalSort(hostname1, hostname2);
-		};
+	var sortByName = function(a, b) {
+		return naturalSort(a.name, b.name);
 	};
 
 	var getProfilePageUrls = function(nodeType, nodeId, nodeName) {
@@ -150,7 +146,7 @@ NewNodeDialog = function() {
 				success : function(data, textStatus, jqXHR) {
 					nodeList.empty();
 					var availableGroups = data;
-					availableGroups.sort(sortByHostname("name"));
+					availableGroups.sort(sortByName);
 					$.each(availableGroups, function(i, group) {
 						if (group.id != 1 && group.name != "My Infrastructure") {
 							nodeList.append($("<option />").val(group.id).text(group.name));
@@ -164,12 +160,12 @@ NewNodeDialog = function() {
 				success : function(data, textStatus, jqXHR) {
 					nodeList.empty();
 					var availableElements = data;
-					availableElements.sort(sortByHostname("hostname"));
+					availableElements.sort(sortByName);
 					$.each(availableElements, function(i, element) {
 						if (!element.isMonitored) {
 							return;
 						}
-						nodeList.append($("<option />").val(element.id).text(element.hostname));
+						nodeList.append($("<option />").val(element.id).text(element.name));
 					});
 				}
 			});
