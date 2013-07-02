@@ -1,6 +1,6 @@
 # PinOnImage Gadget
 
-> Pin element and group status onto custom images such as maps, site plans or workflow diagrams.
+> Create your own customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status.
 
 ## Getting Started
 This gadget is built using Grunt `~0.4.1`.
