@@ -22,12 +22,17 @@
 	<div id="editPanel">
 		<div class="editPanelBackgroundList">
 		<select id="backgroundList">
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/n_america.png">backgrounds/datacenter1.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/usa.png">backgrounds/datacenter2.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/canada_grey.png">backgrounds/na_map.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/South America.png">backgrounds/na_map3.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/africa.png">backgrounds/virtual_infrastructure.jpg</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/Australasia.png">backgrounds/virtual_infrastructure.jpg</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/World.png">World</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/NorthAmerica.png">North America</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/Canada_USA.png">Canada and USA</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/USA.png">USA</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/Canada.png">Canada</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/Europe.png">Canada</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/SouthAmerica.png">South America</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/Africa.png">Africa</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/NorthAfrica_MiddleEast.png">North Africa and Middle East</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/AsiaCentral.png">Asia Central</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/SoutheastAsia_Australasia.png">Southeast Asia and Australasia</option>
 		</select>
 		</div>
 		<div class="editPanelCol2">
