@@ -60,8 +60,8 @@
 									function() {
 										var opt = $(this);
 										var image = $('<div class="imageselector-option" data-url="' + opt.val()
-												+ '"><div class="imageselector-image-container  title="' + opt.text()
-												+ ' style="background-image: url(\'' + opt.val() + '\')"></div></div>');
+												+ '"><div class="imageselector-image-container"  title="' + opt.text()
+												+ '" style="background-image: url(\'' + opt.val() + '\')"></div></div>');
 										image.appendTo(imageList).wrap('<li></li>');
 										imageSelectorWidget._on(image, {
 											click : "_change"

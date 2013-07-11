@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" ?> 
 <Module>
 	<ModulePrefs title="Pin On Image"
-		description="Create your own customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status."
+		description="Create a customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status."
 		thumbnail="pinOnImageThm.png" /> 
 	<Content type="html">
 		<![CDATA[ 
@@ -27,7 +27,7 @@
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/Canada_USA.png">Canada and USA</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/USA.png">USA</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/Canada.png">Canada</option>
-			<option value="__UPTIME_GADGET_BASE__/backgrounds/Europe.png">Canada</option>
+			<option value="__UPTIME_GADGET_BASE__/backgrounds/Europe.png">Europe</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/SouthAmerica.png">South America</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/Africa.png">Africa</option>
 			<option value="__UPTIME_GADGET_BASE__/backgrounds/NorthAfrica_MiddleEast.png">North Africa and Middle East</option>
