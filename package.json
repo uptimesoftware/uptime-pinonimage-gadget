@@ -1,19 +1,18 @@
 {
-	"name": "uptime.PinOnImage",
-	"version": "0.1.1-SNAPSHOT",
-	"description": "Create your own customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status.",
-	"main": "src/pinOnDashboard.js",
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/uptimesoftware/uptime-pinOnImage-gadget.git"
-	},
-	"dependencies": {
-		"uptime-gadget-tasks": "git://github.com/uptimesoftware/uptime-gadget-tasks.git"
-	},
-	"devDependencies": {
-		"grunt": "~0.4.1",
-		"grunt-contrib-compress": "~0.5.2",
-		"grunt-maven-tasks": "~1.0.1"
-	}
+  "name": "uptime.PinOnImage",
+  "version": "0.1.1",
+  "description": "Create your own customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status.",
+  "main": "src/pinOnDashboard.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/uptimesoftware/uptime-pinOnImage-gadget.git"
+  },
+  "dependencies": {
+    "uptime-gadget-tasks": "git://github.com/uptimesoftware/uptime-gadget-tasks.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-compress": "~0.5.2",
+    "grunt-maven-tasks": "~1.0.1"
+  }
 }
-
