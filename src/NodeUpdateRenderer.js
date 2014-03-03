@@ -43,8 +43,15 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 				$.ajax("/api/v1/elements/" + d.elementId + "/status", {
 					cache : false
 				}).done(function(data, textStatus, jqXHR) {
+					if (!data.isMonitored) {	
+						circle.attr("stroke", "#000000");
+						circle.attr("fill", "#ffffff");		
+						circle.data("isMonitored", "false");	
+						return;						
+					}					
 					clearErrorStatus();
 					circle.attr("stroke", getColour(data.status));
+					circle.data("isMonitored", "true");						
 					var monitorStats = getStatusStats(data.monitorStatus);
 					circle.attr("fill", getColour(monitorStats.worstStatus));
 					circle.data("monitorStatusCounts", monitorStats.counts);
@@ -67,10 +74,17 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 				$.ajax("/api/v1/groups/" + d.groupId + "/status", {
 					cache : false
 				}).done(function(data) {
+					if (!data['elementStatus'][d.elementId - 1].isMonitored) {	
+						circle.attr("stroke", "#000000");
+						circle.attr("fill", "#ffffff");	
+						circle.data("isMonitored", "false");							
+						return;						
+					}							
 					clearErrorStatus();
 					var elementStats = getStatusStats(data.elementStatus);
 					circle.attr("stroke", getColour(elementStats.worstStatus));
 					circle.data("elementStatusCounts", elementStats.counts);
+					circle.data("isMonitored", "true");						
 					var monitorStats = getStatusStats(data.monitorStatus);
 					circle.attr("fill", getColour(monitorStats.worstStatus));
 					circle.data("monitorStatusCounts", monitorStats.counts);
@@ -241,8 +255,12 @@ NodeUpdateRenderer = function(syncDashboard, getEditNodePropertiesDialog, remove
 			my : "left top",
 			at : "right+40 bottom-10"
 		});
-		tooltip.select(".nodeName").text(systemDatum.name);
 		jqMapNodeData = jqMapNode.data();
+		if (jqMapNodeData.isMonitored === 'true') {
+			tooltip.select(".nodeName").text(systemDatum.name);		
+		} else {
+			tooltip.select(".nodeName").text(systemDatum.name + " (unmonitored)");	
+		}		
 		if (jqMapNodeData.elementStatusCounts) {
 			var elementCounts = tooltip.select(".elementCounts");
 			elementCounts.style("display", "block").selectAll("td.countValue").each(function() {
