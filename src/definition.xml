@@ -3,6 +3,23 @@
 	<ModulePrefs title="Pin On Image"
 		description="Create a customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status."
 		thumbnail="pinOnImageThm.png" /> 
+	<gadget_version>
+		1.0
+	</gadget_version>
+	<grid_info>
+		<supported_versions>
+			7.3
+		</supported_versions>
+		<supported_platforms>
+			windows,linux
+		</supported_platforms>
+		<requires_agent_scripts>
+			false
+		</requires_agent_scripts>
+		<upgrade_in_place>
+			true
+		</upgrade_in_place>
+	</grid_info>
 	<Content type="html">
 		<![CDATA[ 
 <html>
