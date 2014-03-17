@@ -4,7 +4,7 @@
 		description="Create a customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status."
 		thumbnail="pinOnImageThm.png" /> 
 	<gadget_version>
-		1.0
+		<%= pkg.gadget_version %>
 	</gadget_version>
 	<grid_info>
 		<supported_versions>
@@ -28,12 +28,12 @@
 <title>Pin On Image</title>
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/imageselector.css" />
 <link rel="stylesheet" type="text/css" href="__UPTIME_GADGET_BASE__/map.css" />
-<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js"></script>
-<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uuid.js"></script>
-<script type="text/javascript" src="__UPTIME_GADGET_BASE__/imageselector.js"></script>
-<script type="text/javascript" src="__UPTIME_GADGET_BASE__/NewNodeDialog.js"></script>
-<script type="text/javascript" src="__UPTIME_GADGET_BASE__/NodeUpdateRenderer.js"></script>
-<script type="text/javascript" src="__UPTIME_GADGET_BASE__/pinOnDashboard.js"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/jquery.ba-throttle-debounce.min.js?v=<%= pkg.gadget_version %>"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/uuid.js?v=<%= pkg.gadget_version %>"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/imageselector.js?v=<%= pkg.gadget_version %>"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/NewNodeDialog.js?v=<%= pkg.gadget_version %>"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/NodeUpdateRenderer.js?v=<%= pkg.gadget_version %>"></script>
+<script type="text/javascript" src="__UPTIME_GADGET_BASE__/pinOnDashboard.js?v=<%= pkg.gadget_version %>"></script>
 </head>
 <body>
 	<div id="editPanel">
