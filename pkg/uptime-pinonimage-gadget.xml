@@ -10,4 +10,5 @@
         <upgrade_in_place>true</upgrade_in_place>
         <requires_agent_scripts>false</requires_agent_scripts>
     </grid_info>
+    <help>Create your own customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status.</help>
 </uptime>
