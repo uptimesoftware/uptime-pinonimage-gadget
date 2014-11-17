@@ -1,6 +1,6 @@
 {
   "name": "uptime.PinOnImage",
-  "version": "1.0.0-SNAPSHOT",
+  "version": "1.0.0",
   "description": "Create your own customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status.",
   "main": "src/pinOnDashboard.js",
   "repository": {
