@@ -181,7 +181,7 @@ NewNodeDialog = function() {
 			}
 		}, function(error) {
 			$('div.mapNodeProperties button.ok').prop('disabled', true).addClass("ui-state-disabled");
-			var errorSpan = uptimeErrorFormatter.getErrorSpan(error, "Error Communicating with up.time Controller");
+			var errorSpan = uptimeErrorFormatter.getErrorSpan(error, "Error Communicating with Uptime Controller");
 			$('#mapNodeProperties .mapNodePropertiesError').empty().append(errorSpan).slideDown();
 		});
 	};
