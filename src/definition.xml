@@ -4,7 +4,7 @@
 		description="Create a customized status view of IT service, application, geography, topology, workflows or anything else you can dream up. Use a custom image as your background and place pins to indicate status."
 		thumbnail="pinOnImageThm.png" /> 
 	<gadget_version>
-		<%= pkg.gadget_version %>
+		1.3
 	</gadget_version>
 	<grid_info>
 		<supported_versions>
